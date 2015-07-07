@@ -1,1 +1,1 @@
-# opium
+An extensible IoC container.
