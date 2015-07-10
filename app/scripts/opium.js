@@ -63,7 +63,7 @@ export default class Opium {
     }
 
     inject() {
-        for (let dep in this.registry.values) {
+        for (let dep of this.registry.values()) {
             dep.inject(); // inject all dependencies
         }
     }

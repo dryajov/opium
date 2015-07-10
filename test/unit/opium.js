@@ -1,23 +1,28 @@
 import Opium from '../../app/scripts/opium';
 import {SINGLETON, PROTOTYPE} from '../../app/scripts/consts';
 
-describe('opium', function () {
+describe('opium', () => {
 
     //it('should exist', function () {
     //    expect(Opium).to.exist(); // this doesn't work, since Opium class doesn't exist when transpiled
     //});
 
-    describe('factory tests', function () {
-        it('factory should inject singleton', function () {
-            let opium = new Opium();
+    describe('factory tests', () => {
+
+        let opium, factory;
+        beforeEach(() => {
+            opium = new Opium();
             opium.registerInstance('param1', 'param 1');
             opium.registerInstance('param2', 'param 2');
 
             let count = 0;
-            let factory = function (param1, param2) {
+            factory = function (param1, param2) {
                 return [param1, param2, ++count];
-            };
+            }
             factory.inject = ['param1', 'param2'];
+        });
+
+        it('factory should inject singleton', () => {
             opium.registerFactory('factory', factory);
 
             let dep = opium.getDep('factory');
@@ -34,16 +39,7 @@ describe('opium', function () {
             expect(injected1[2]).toBe(1);
         });
 
-        it('factory should inject prototype', function () {
-            let opium = new Opium();
-            opium.registerInstance('param1', 'param 1');
-            opium.registerInstance('param2', 'param 2');
-
-            let count = 0;
-            let factory = function (param1, param2) {
-                return [param1, param2, ++count];
-            };
-            factory.inject = ['param1', 'param2'];
+        it('factory should inject prototype', () => {
             opium.registerFactory('factory', factory, {lifecycle: PROTOTYPE});
 
             let dep = opium.getDep('factory');
@@ -61,23 +57,25 @@ describe('opium', function () {
         });
     });
 
-    describe('type tests', function () {
-        it('type should inject singleton', function () {
-            let opium = new Opium();
+    describe('type tests', () => {
+        let count, opium;
+        class MyType {
+            constructor(param1, param2) {
+                this.param1 = param1;
+                this.param2 = param2;
+                this.count = ++count;
+            }
+        }
 
+        beforeEach(() => {
+            count = 0;
+            opium = new Opium();
             opium.registerInstance('param1', 'param 1');
             opium.registerInstance('param2', 'param 2');
-
-            let count = 0;
-            class MyType {
-                constructor(param1, param2) {
-                    this.param1 = param1;
-                    this.param2 = param2;
-                    this.count = ++count;
-                }
-            }
-
             MyType.inject = ['param1', 'param2'];
+        });
+
+        it('type should inject singleton', () => {
             opium.registerType('type', MyType);
 
             let dep = opium.getDep('type');
@@ -94,22 +92,7 @@ describe('opium', function () {
             expect(injected1.count).toBe(1);
         });
 
-        it('type should inject prototype', function () {
-            let opium = new Opium();
-
-            opium.registerInstance('param1', 'param 1');
-            opium.registerInstance('param2', 'param 2');
-
-            let count = 0;
-            class MyType {
-                constructor(param1, param2) {
-                    this.param1 = param1;
-                    this.param2 = param2;
-                    this.count = ++count;
-                }
-            }
-
-            MyType.inject = ['param1', 'param2'];
+        it('type should inject prototype', () => {
             opium.registerType('type', MyType, {lifecycle: PROTOTYPE});
 
             let dep = opium.getDep('type');
@@ -127,29 +110,33 @@ describe('opium', function () {
         });
     });
 
-    describe('instance tests', function () {
-        it('instance should inject singleton', function () {
-            let opium = new Opium();
+    describe('instance tests', () => {
+
+        class MyType {
+            constructor() {
+                this.param1 = null;
+                this.param2 = null;
+                this.count = null;
+            }
+        }
+
+        let opium, count, factory;
+        beforeEach(() => {
+            opium = new Opium();
 
             opium.registerInstance('param1', 'param 1');
             opium.registerInstance('param2', 'param 2');
 
-            let count = 0;
-            let factory = function () {
+            count = 0;
+            factory = function () {
                 return ++count;
-            };
+            }
+        });
 
+        it('instance should inject singleton', () => {
             opium.registerFactory('count', factory);
 
-            class MyClass {
-                constructor() {
-                    this.param1 = null;
-                    this.param2 = null;
-                    this.count = null;
-                }
-            }
-
-            let instance = new MyClass();
+            let instance = new MyType();
             instance.inject = ['param1', 'param2', 'count'];
 
             opium.registerInstance('type', instance);
@@ -168,28 +155,10 @@ describe('opium', function () {
             expect(injected1.count).toBe(1);
         });
 
-        it('instance should inject prototype', function () {
-            let opium = new Opium();
-
-            opium.registerInstance('param1', 'param 1');
-            opium.registerInstance('param2', 'param 2');
-
-            let count = 0;
-            let factory = function () {
-                return ++count;
-            };
-
+        it('instance should inject prototype', () => {
             opium.registerFactory('count', factory, {lifecycle: PROTOTYPE});
 
-            class MyClass {
-                constructor() {
-                    this.param1 = null;
-                    this.param2 = null;
-                    this.count = null;
-                }
-            }
-
-            let instance = new MyClass();
+            let instance = new MyType();
             instance.inject = ['param1', 'param2', 'count'];
 
             opium.registerInstance('type', instance, {lifecycle: PROTOTYPE});
@@ -207,5 +176,53 @@ describe('opium', function () {
             expect(injected1.param2).toBe('param 2');
             expect(injected1.count).toBe(2);
         });
+    });
+
+    describe('inject all', () => {
+
+        class MyType {
+            constructor(param1, param2, factoryVal) {
+                this.param1 = param1;
+                this.param2 = param2;
+                this.factoryVal = factoryVal;
+            }
+        }
+
+        let opium, factory;
+        beforeEach(() => {
+            opium = new Opium();
+        });
+
+        it('should inject all', () => {
+            opium.registerInstance('param1', 'param 1');
+            opium.registerInstance('param2', 'param 2');
+
+            factory = function (param1, param2) {
+                return [param1, param2];
+            };
+            factory.inject = ['param1', 'param2'];
+
+            opium.registerFactory('factory', factory);
+
+            let type = MyType;
+            type.inject = ['param1', 'param2', 'factory'];
+            opium.registerType('type', type);
+
+            opium.inject();
+
+            let injectedFactory = opium.getDep('factory').injected;
+            let injectedType = opium.getDep('type').injected;
+            let injectedParam1 = opium.getDep('param1').injected;
+            let injectedParam2 = opium.getDep('param2').injected;
+
+            expect(injectedParam1).toBe('param 1');
+            expect(injectedParam2).toBe('param 2');
+            expect(injectedFactory[0]).toBe('param 1');
+            expect(injectedFactory[1]).toBe('param 2');
+            expect(injectedType.param1).toBe('param 1');
+            expect(injectedType.param2).toBe('param 2');
+            expect(injectedType.factoryVal[0]).toBe('param 1');
+            expect(injectedType.factoryVal[1]).toBe('param 2');
+        })
     });
 });
