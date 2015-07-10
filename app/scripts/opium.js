@@ -1,5 +1,4 @@
 /*jshint unused:false*/
-import PropResolver from './resolvers/propresolver';
 import Dependency from './dependency';
 import PropertyInjector from './injectors/property-injector';
 import ConstructorInjector from './injectors/constructor-injector';
@@ -7,11 +6,9 @@ import ArgumentInjector from './injectors/argument-injector';
 import {SINGLETON, PROTOTYPE} from './consts';
 
 export default class Opium {
-    constructor(resolver = new PropResolver(), lifeCycle = SINGLETON) {
+    constructor(lifeCycle = SINGLETON) {
         this.registry = new Map();
         this.lifeCycle = lifeCycle;
-        this.defaultResolver = resolver;
-        resolver.registry = resolver.registry || this.registry;
     }
 
     get defaultLifecycle() {
@@ -26,37 +23,37 @@ export default class Opium {
         return this.registry.get(name);
     }
 
-    registerType(name, type, options) {
+    registerType(name, type, deps, options) {
         options = options || {};
         this.register(name,
             type,
-            options.resolver || this.defaultResolver,
+            deps,
             new ConstructorInjector(),
             options.lifecycle || this.defaultLifecycle);
     }
 
-    registerFactory(name, factory, options) {
+    registerFactory(name, factory, deps, options) {
         options = options || {};
         this.register(name,
             factory,
-            options.resolver || this.defaultResolver,
+            deps,
             new ArgumentInjector(),
             options.lifecycle || this.defaultLifecycle);
     }
 
-    registerInstance(name, instance, options) {
+    registerInstance(name, instance, deps, options) {
         options = options || {};
         this.register(name,
             instance,
-            options.resolver || this.defaultResolver,
+            deps,
             new PropertyInjector(),
             options.lifecycle || this.defaultLifecycle);
     }
 
-    register(name, dep, resolver, injector, lifecycle) {
+    register(name, dep, deps, injector, lifecycle) {
         this.registry.set(name, new Dependency(name,
             dep,
-            resolver,
+            deps,
             this.registry,
             injector,
             lifecycle));

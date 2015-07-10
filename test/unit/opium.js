@@ -19,11 +19,10 @@ describe('opium', () => {
             factory = function (param1, param2) {
                 return [param1, param2, ++count];
             }
-            factory.inject = ['param1', 'param2'];
         });
 
         it('factory should inject singleton', () => {
-            opium.registerFactory('factory', factory);
+            opium.registerFactory('factory', factory, ['param1', 'param2']);
 
             let dep = opium.getDep('factory');
 
@@ -40,7 +39,7 @@ describe('opium', () => {
         });
 
         it('factory should inject prototype', () => {
-            opium.registerFactory('factory', factory, {lifecycle: PROTOTYPE});
+            opium.registerFactory('factory', factory, ['param1', 'param2'], {lifecycle: PROTOTYPE});
 
             let dep = opium.getDep('factory');
 
@@ -72,11 +71,10 @@ describe('opium', () => {
             opium = new Opium();
             opium.registerInstance('param1', 'param 1');
             opium.registerInstance('param2', 'param 2');
-            MyType.inject = ['param1', 'param2'];
         });
 
         it('type should inject singleton', () => {
-            opium.registerType('type', MyType);
+            opium.registerType('type', MyType, ['param1', 'param2']);
 
             let dep = opium.getDep('type');
             let injected = dep.inject();
@@ -93,7 +91,7 @@ describe('opium', () => {
         });
 
         it('type should inject prototype', () => {
-            opium.registerType('type', MyType, {lifecycle: PROTOTYPE});
+            opium.registerType('type', MyType, ['param1', 'param2'], {lifecycle: PROTOTYPE});
 
             let dep = opium.getDep('type');
             let injected = dep.inject();
@@ -137,9 +135,8 @@ describe('opium', () => {
             opium.registerFactory('count', factory);
 
             let instance = new MyType();
-            instance.inject = ['param1', 'param2', 'count'];
 
-            opium.registerInstance('type', instance);
+            opium.registerInstance('type', instance, ['param1', 'param2', 'count']);
 
             let dep = opium.getDep('type');
             let injected = dep.inject();
@@ -156,12 +153,11 @@ describe('opium', () => {
         });
 
         it('instance should inject prototype', () => {
-            opium.registerFactory('count', factory, {lifecycle: PROTOTYPE});
+            opium.registerFactory('count', factory, ['param1', 'param2'], {lifecycle: PROTOTYPE});
 
             let instance = new MyType();
-            instance.inject = ['param1', 'param2', 'count'];
 
-            opium.registerInstance('type', instance, {lifecycle: PROTOTYPE});
+            opium.registerInstance('type', instance, ['param1', 'param2', 'count'], {lifecycle: PROTOTYPE});
 
             let dep = opium.getDep('type');
             let injected = dep.inject();
@@ -202,11 +198,10 @@ describe('opium', () => {
             };
             factory.inject = ['param1', 'param2'];
 
-            opium.registerFactory('factory', factory);
+            opium.registerFactory('factory', factory, ['param1', 'param2']);
 
             let type = MyType;
-            type.inject = ['param1', 'param2', 'factory'];
-            opium.registerType('type', type);
+            opium.registerType('type', type, ['param1', 'param2', 'factory']);
 
             opium.inject();
 
