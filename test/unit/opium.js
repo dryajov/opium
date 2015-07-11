@@ -196,7 +196,6 @@ describe('opium', () => {
             factory = function (param1, param2) {
                 return [param1, param2];
             };
-            factory.inject = ['param1', 'param2'];
 
             opium.registerFactory('factory', factory, ['param1', 'param2']);
 

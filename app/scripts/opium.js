@@ -6,7 +6,8 @@ import ArgumentInjector from './injectors/argument-injector';
 import {SINGLETON, PROTOTYPE} from './consts';
 
 export default class Opium {
-    constructor(lifeCycle = SINGLETON) {
+    constructor(name = 'default', lifeCycle = SINGLETON) {
+        this.name = name;
         this.registry = new Map();
         this.lifeCycle = lifeCycle;
     }
