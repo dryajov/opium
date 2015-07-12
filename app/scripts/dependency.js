@@ -5,7 +5,6 @@
 import {SINGLETON, PROTOTYPE} from './consts';
 
 export default class Dependency {
-    /*jshint maxparams: 5 */
     constructor(name, dep, deps, registry, injector, lifecycle) {
         this.name = name;
         this.dep = dep;

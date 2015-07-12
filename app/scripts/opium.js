@@ -20,12 +20,25 @@ export default class Opium {
         this.lifeCycle = val;
     }
 
+    /**
+     * Ge dependency by name
+     *
+     * @param name
+     * @returns {*}
+     */
     getDep(name) {
         return this.registry.get(name);
     }
 
-    registerType(name, type, deps, options) {
-        options = options || {};
+    /**
+     * Register a type. By default, type dependencies use constructor injection.
+     *
+     * @param name - Name to register this dependency with
+     * @param type - The type that this dependency is going to be registered with
+     * @param deps - An array of dependencies to be resolved before this dependency is created
+     * @param options - An options object to configure this dependency
+     */
+    registerType(name, type, deps = null, options = {}) {
         this.register(name,
             type,
             deps,
@@ -33,8 +46,15 @@ export default class Opium {
             options.lifecycle || this.defaultLifecycle);
     }
 
-    registerFactory(name, factory, deps, options) {
-        options = options || {};
+    /**
+     * Register a factory. By default, factory dependencies use argument injection.
+     *
+     * @param name - Name to register this dependency with
+     * @param factory - The factory that will be used to create the dependency
+     * @param deps - An array of dependencies to be resolved before this factory is called
+     * @param options - An options object to configure this dependency
+     */
+    registerFactory(name, factory, deps = null, options = {}) {
         this.register(name,
             factory,
             deps,
@@ -42,8 +62,15 @@ export default class Opium {
             options.lifecycle || this.defaultLifecycle);
     }
 
-    registerInstance(name, instance, deps, options) {
-        options = options || {};
+    /**
+     * Register an instance (a concrete object). By default, instance dependencies use property/setter injection.
+     *
+     * @param name
+     * @param instance
+     * @param deps
+     * @param options
+     */
+    registerInstance(name, instance, deps = null, options = {}) {
         this.register(name,
             instance,
             deps,
@@ -51,6 +78,16 @@ export default class Opium {
             options.lifecycle || this.defaultLifecycle);
     }
 
+    /**
+     * Register a dependency. This is called by registerType, registerFactory and registerInstance underneath to register
+     * dependencies.
+     *
+     * @param name - Name of the dependency
+     * @param dep - The dependency. Can be a type, factory or instance.
+     * @param deps - An array of dependencies to be resolved before this dependency is injected.
+     * @param injector - The injector to be used in order to perform the injection of the dependencies.
+     * @param lifecycle - The lifecycle for this dependency {SINGLETON, PROTOTYPE}
+     */
     register(name, dep, deps, injector, lifecycle) {
         this.registry.set(name, new Dependency(name,
             dep,
@@ -60,6 +97,9 @@ export default class Opium {
             lifecycle));
     }
 
+    /**
+     * Inject all dependencies in this context and its subcontexts
+     */
     inject() {
         for (let dep of this.registry.values()) {
             dep.inject(); // inject all dependencies

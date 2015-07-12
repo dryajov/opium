@@ -3,6 +3,5 @@
 var gulp = require('gulp');
 
 // Default task
-gulp.task('default', ['clean'], function () {
-    gulp.start('dev');
+gulp.task('default', ['clean', 'build', 'test'], function () {
 });
