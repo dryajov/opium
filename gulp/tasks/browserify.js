@@ -20,7 +20,10 @@ gulp.task('vendor', function () {
 
 // Browserify
 gulp.task('browserify', function () {
-    return browserify({debug: true})
+    return browserify({
+            debug: true,
+            standalone: 'Opium'
+        })
         .transform(babelify)
         .add('./app/scripts/opium.js')
         .bundle()
@@ -41,7 +44,9 @@ gulp.task('browserify-test', ['browserify', 'vendor'], function () {
 
 // Script Dist
 gulp.task('scripts:dist', function () {
-    return gulp.src(['dist/scripts/*.js'], {base: 'dist'})
+    return gulp.src(['./dist/scripts/*.js'], {base: 'dist'})
+        .pipe(debug())
+        .require('babel/polyfill')
         .transform(babelify)
         .pipe(gulp.dest('dist'))
         .pipe(rev())

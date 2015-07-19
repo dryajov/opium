@@ -42,7 +42,7 @@ export default class Opium {
         this.register(name,
             type,
             deps,
-            new ConstructorInjector(),
+            options.injector || new ConstructorInjector(),
             options.lifecycle || this.defaultLifecycle);
     }
 
@@ -58,7 +58,7 @@ export default class Opium {
         this.register(name,
             factory,
             deps,
-            new ArgumentInjector(),
+            options.injector || new ArgumentInjector(),
             options.lifecycle || this.defaultLifecycle);
     }
 
@@ -74,7 +74,7 @@ export default class Opium {
         this.register(name,
             instance,
             deps,
-            new PropertyInjector(),
+            options.injector || new PropertyInjector(),
             options.lifecycle || this.defaultLifecycle);
     }
 
@@ -98,7 +98,7 @@ export default class Opium {
     }
 
     /**
-     * Inject all dependencies in this context and its subcontexts
+     * Inject all dependencies
      */
     inject() {
         for (let dep of this.registry.values()) {

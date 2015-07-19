@@ -15,8 +15,8 @@ export default class PropertyInjector extends Injector {
         }
 
         allDeps.forEach((depDep) => {
-            if (!dep.dep.hasOwnProperty(depDep.name)) {
-                console.warn(`Unable to inject dependency ${depDep.name} for ${dep.name}`);
+            if (typeof dep.dep[depDep.name] === 'undefined') {
+                console.warn(`Unable to inject dependency ${depDep.name} into ${dep.name}`);
             }
 
             dep.dep[depDep.name] = depDep.injected; // set property
