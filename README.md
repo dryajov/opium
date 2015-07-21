@@ -1,4 +1,4 @@
-## Opium ##
+## Opium
 
 `Opium` is a dependency injection framework for javascript. The aim of `opium` is to provide the simplest possible and yet functionally complete dependency injection solution.  
 
