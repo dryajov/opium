@@ -42,8 +42,9 @@ Any dependency registered with `opium` is wrapped in a `Dependency` object, that
 
 It's important to understand, that the result of the invocation is cached, not the type/factory/instance. For example calling inject on a `type` with `PROTOTYPE` lifecycle will create a new instance every time, however calling a `factory` with `SINGLETON` lifecycle will cache the result of invoking the factory function and return the same result over and over again. 
 
-#### API
+### API
 
+#### Opium
 
 ##### opium.registerType(`name`, `Type`, `['optional', 'list', 'of', 'dependencies']`, `SINGLETON|PROTOTYPE`)
 
@@ -57,3 +58,17 @@ When a `factory` dependency is registered, `opium` will try to invoke the factor
 
 When an `instance` dependency is registered, `opium` will look for, and set properties that match the name of dependencies listed in the dependencies array, in effect performing property injection. 
 
+##### opium.inject()
+
+Triggers injection of all dependencies registered with that container, by default resolution happens on demand.
+
+
+### Dependency
+
+#### dependency.resolve()
+
+Return an array of `Dependencies` that this `Dependency` expects. The returned `Dependencies` might or might not be injected.
+
+#### dependency.inject()
+
+Triggers the `Dependency` graph resolution for this `Dependency` and all its `Dependencies`. Call this if you want to wire a single `Dependency`.
