@@ -2,11 +2,18 @@
     "name": "opium-ioc",
     "version": "0.0.1",
     "main": "app/scripts/opium.js",
+    "private": false,
+    "license": "MIT",
+    "repository": {
+        "type": "git",
+        "url": "git://github.com/dryajov/opium.git"
+    },
     "engines": {
         "node": ">=0.10.0"
     },
     "scripts": {
-        "dist": "NODE_ENV=production gulp dist"
+        "dist": "NODE_ENV=production gulp dist",
+        "test": "gulp build test"
     },
     "devDependencies": {
         "babel": "^5.6.14",
@@ -50,5 +57,13 @@
     },
     "browserify": {
         "transform": ["babelify"]
-    }
+    },
+    "keywords": [
+        "IoC",
+        "DI",
+        "dependency injection",
+        "inversion of control",
+        "es6 IoC",
+        "es6 DI"
+    ]
 }
