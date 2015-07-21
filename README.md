@@ -36,20 +36,20 @@ In addition to dependency types, `opium` also assumes two types of dependency li
 
 #### Dependency
 
-Any dependency registered with `opium` is wrapper in a `Dependency` object, that provides a very basic set of metadata, and methods to manipulate it. The most important method of the `Dependency` is `inject`. Whenever `inject`is called on a `Dependency`, its dependency graph is immediately resolved and all its dependencies are properly injected in cascading order. Depending on its lifecycle, a dependency might be resolved once and cached for each subsequent call, or resolved every time `inject` is called. In the case on `SINGLETON` the result of calling `inject`is cached, in the case of `PROTOTYPE` no caching is done, and the resolution happens on every invocation. 
+Any dependency registered with `opium` is wrapped in a `Dependency` object, that provides a very basic set of metadata, and methods to manipulate it. The most important method is `inject`. Whenever `inject`is called on a `Dependency`, its dependency graph is immediately resolved and all its dependencies are properly injected in cascading order. Depending on its lifecycle, a dependency might be resolved once and cached for each subsequent call, or resolved every time `inject` is called. In the case on `SINGLETON` the result of calling `inject`is cached, in the case of `PROTOTYPE` no caching is done, and the resolution happens on every invocation. 
 
-Its important to understand, that the result of the invocation is cached, not the type/factory/instance. For example calling inject on a `type` with `PROTOTYPE` lifecycle will create a new instance every time, however calling a `factory` with `SINGLETON` lifecycle will cache the result of invoking the factory function and return the same result over and over again. 
+It's important to understand, that the result of the invocation is cached, not the type/factory/instance. For example calling inject on a `type` with `PROTOTYPE` lifecycle will create a new instance every time, however calling a `factory` with `SINGLETON` lifecycle will cache the result of invoking the factory function and return the same result over and over again. 
 
 #### API
 
 
 ##### opium.registerType(`name`, `Type`, `['optional', 'list', 'of', 'dependencies']`, `SINGLETON|PROTOTYPE`)
 
-A `type` is either a constructor function, or an es6 class declaration. When a `type` dependency is registered, `opium` will try to create and instance and an pass all listed dependencies as constructor parameters, in effect performing constructor injection. Constructor parameters will be passed in, in the order of their declaration in the dependencies array.
+A `type` is either a constructor function, or an es6 class declaration. When a `type` dependency is registered, `opium` will try to create an instance and an pass all listed dependencies as constructor parameters, in effect performing constructor injection. Constructor parameters will be passed in the order of their declaration in the dependencies array.
 
 ##### opium.registerFactory(`name`, `function(){}`, `['optional', 'list', 'of', 'dependencies']`, `SINGLETON|PROTOTYPE`)
 
-When a `factory` dependency is registered, `opium` will try to invoke the factory and an pass all listed dependencies as function arguments, in effect performing argument injection.  Dependencies will be passed in, in the order of declaration in the dependencies array.
+When a `factory` dependency is registered, `opium` will try to invoke the factory and an pass all listed dependencies as function arguments, in effect performing argument injection.  Dependencies will be passed in the order of declaration in the dependencies array.
 
 ##### opium.registerInstance(`name`, `Object.create()`, `['optional', 'list', 'of', 'dependencies']`, `SINGLETON|PROTOTYPE`)
 
