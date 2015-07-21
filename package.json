@@ -1,5 +1,5 @@
 {
-    "name": "opium",
+    "name": "opium-ioc",
     "version": "0.0.0",
     "main": "app/scripts/opium.js",
     "engines": {
