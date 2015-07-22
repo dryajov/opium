@@ -7,9 +7,10 @@ import Resolver from './resolver';
 export default class PropResolver extends Resolver {
 
     /**
+     * Construct property resolver
      *
-     * @param injector
-     * @param propName
+     * @param injector - Injector instance to be used
+     * @param propName - Property name
      */
     constructor(injector, propName = '$inject') {
         super(injector);
@@ -18,8 +19,9 @@ export default class PropResolver extends Resolver {
     }
 
     /**
+     * Resolve dependency names
      *
-     * @param obj
+     * @param obj - Object to resolve property for
      * @returns {*}
      */
     resolve(obj) {
