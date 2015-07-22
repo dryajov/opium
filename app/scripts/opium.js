@@ -38,12 +38,12 @@ export default class Opium {
      * @param deps - An array of dependencies to be resolved before this dependency is created
      * @param options - An options object to configure this dependency
      */
-    registerType(name, type, deps = null, options = {}) {
+    registerType(name, type, deps = null, lifecycle = null) {
         this.register(name,
             type,
             deps,
-            options.injector || new ConstructorInjector(),
-            options.lifecycle || this.defaultLifecycle);
+            new ConstructorInjector(),
+            lifecycle || this.defaultLifecycle);
     }
 
     /**
@@ -54,12 +54,12 @@ export default class Opium {
      * @param deps - An array of dependencies to be resolved before this factory is called
      * @param options - An options object to configure this dependency
      */
-    registerFactory(name, factory, deps = null, options = {}) {
+    registerFactory(name, factory, deps = null, lifecycle = null) {
         this.register(name,
             factory,
             deps,
-            options.injector || new ArgumentInjector(),
-            options.lifecycle || this.defaultLifecycle);
+            new ArgumentInjector(),
+            lifecycle || this.defaultLifecycle);
     }
 
     /**
@@ -70,12 +70,12 @@ export default class Opium {
      * @param deps
      * @param options
      */
-    registerInstance(name, instance, deps = null, options = {}) {
+    registerInstance(name, instance, deps = null, lifecycle = null) {
         this.register(name,
             instance,
             deps,
-            options.injector || new PropertyInjector(),
-            options.lifecycle || this.defaultLifecycle);
+            new PropertyInjector(),
+            lifecycle || this.defaultLifecycle);
     }
 
     /**
@@ -95,6 +95,21 @@ export default class Opium {
             this.registry,
             injector,
             lifecycle));
+    }
+
+    /**
+     * Remove dependency from the registry
+     *
+     * @param name
+     * @returns {*}
+     */
+    unRegister(name) {
+        let dep;
+        if (dep = this.registry.get(name)) {
+            this.registry.delete(name);
+        }
+
+        return dep;
     }
 
     /**

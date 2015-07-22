@@ -4,7 +4,24 @@
 
 import {SINGLETON, PROTOTYPE} from './consts';
 
+/**
+ * A Dependency wraps any real dependency (thingy) and provides the facilities
+ * require to perform DI on it. Whenever one of the register* methods is called
+ * to register a dependency with Opium, it will be wrapped in this object, subsequent
+ * calls to the inject method on it, will trigger the injection cycle.
+ */
 export default class Dependency {
+
+    /**
+     * Construct a dependency
+     *
+     * @param name - Name of the dependency
+     * @param dep - The dependency to be wrapped
+     * @param deps - An array of dependency names
+     * @param registry - The global dep registry
+     * @param injector - The injector to be used
+     * @param lifecycle - The lifecycle of the depepndency
+     */
     constructor(name, dep, deps, registry, injector, lifecycle) {
         this.name = name;
         this.dep = dep;
@@ -20,16 +37,11 @@ export default class Dependency {
         }
     }
 
-    getDep(name) {
-        for (let dep of this.deps) {
-            if (dep.name === name) {
-                return dep;
-            }
-        }
-
-        throw new Error(`No dependency found for ${name}`);
-    }
-
+    /**
+     * Perform the injection cycle according to the current dep lifecycle
+     *
+     * @returns {Dependency.injected|*} - Returns the result of performing the injection cycle
+     */
     inject() {
         if (!this.injected || this.lifecycle === PROTOTYPE) {
             this.injected = this.injector.inject(this) || this.dep;
@@ -38,6 +50,11 @@ export default class Dependency {
         return this.injected;
     }
 
+    /**
+     * Get an array of dependencies that this Dependency expects
+     *
+     * @returns {Array}
+     */
     resolve() {
         let dependencies = [];
         if (this.deps) {

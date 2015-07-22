@@ -16,7 +16,7 @@ module.exports = function (karma) {
             'test/**/*Spec.js': ['babel']
         },
 
-        browsers: ['Chrome'],
+        browsers: ['PhantomJS'],
 
         logLevel: 'LOG_DEBUG',
 

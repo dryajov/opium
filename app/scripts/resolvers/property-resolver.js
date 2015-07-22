@@ -5,14 +5,25 @@
 import Resolver from './resolver';
 
 export default class PropResolver extends Resolver {
+
+    /**
+     *
+     * @param injector
+     * @param propName
+     */
     constructor(injector, propName = '$inject') {
         super(injector);
 
         this.propName = propName;
     }
 
+    /**
+     *
+     * @param obj
+     * @returns {*}
+     */
     resolve(obj) {
-        if (!obj || (obj && !(this.propName in obj))) {
+        if (!(this.propName in obj)) {
             console.info(`Undefined object or no injector property "${this.propName}" found!`);
             return;
         }
