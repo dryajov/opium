@@ -9,7 +9,7 @@ Opium - DI for the masses.
 
 #### Usage
 
-#####es6
+##### es6
 ```javascript
 import Opium from 'opium-ioc';
 import {SINGLETON, PROTOTYPE} from 'opium-ioc/consts';
@@ -31,7 +31,7 @@ console.log(injected[0], injected[1], injected[2])
 
 ```
 
-#####es5
+##### es5
 ```javascript
 var Opium = require('opium-ioc');
 var consts = require('opium-ioc/app/scripts/consts');
@@ -74,13 +74,16 @@ There are two phases, `register` and `resolve`.
 By default, register maps a `register*` method to a type of dependency.
 The dependency types are - TYPE, FACTORY, INSTANCE and are looked up in the option's object type property that is passed to `register`. `Register` will call `resolve` just before performing registration of the dependency, and it expects an array of dependency names to be returned by it.           
                                                                                                             
-This model should be flexible enough to allow writing resolvers for different needs and scenarios. The api has been intentionally left very generic to allow extensibility, and cater to as many different needs as possible. However, this is not considered a core part of the framework, and is provided for convenience  
-mostly. Consider defining your own set of resolvers if this does not fit into your existing model, or using  the programmatic API directly.                                                                              
+This model should be flexible enough to allow writing resolvers for different needs and scenarios. The api has been intentionally left very generic to allow extensibility, and cater to as many different needs as possible. However, this is not considered a core part of the framework, and is provided for convenience mostly. Consider defining your own set of resolvers if this does not fit into your existing model, or using  the programmatic API directly.
+
+For an example of an existing resolver take a look at [property-resolver.js](https://github.com/dryajov/opium/blob/master/app/scripts/resolvers/property-resolver.js)
 
 
 ### API
 
+
 #### Opium
+
 
 ##### opium.registerType(`name`, `Type`, `['optional', 'list', 'of', 'dependencies']`, `SINGLETON|PROTOTYPE`)
 
@@ -122,4 +125,5 @@ Triggers the `Dependency` graph resolution for this `Dependency` and all its `De
 Register a dependency.
 
 #### resolve(`dep`)
+
 Resolve dependency names from the passed in dependency. By default, its called right before registering a dependency by the register method.
