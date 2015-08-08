@@ -56,7 +56,7 @@ console.log(injected[0], injected[1], injected[2])
 
 #### Types of Dependencies
 
-`Opium` is built around the assumption of there common types of dependencies. These dependency types are - `type`,  `factory` and `instance`.  There are three corresponding methods for registering each dependency type - `registerType`, `registerFactory` and `registerInstance`.  
+`Opium` is built around the assumption of three common types of dependencies. These dependency types are - `type`,  `factory` and `instance`.  There are three corresponding methods for registering each dependency type - `registerType`, `registerFactory` and `registerInstance`.  
 
 In addition to dependency types, `opium` also assumes two types of dependency lifecycle -  `SINGLETON` and `PROTOTYPE`. `SINGLETON` dependencies are instantiated and injected only once, `PROTOTYPE` dependencies are instantiated and injected on each `inject()` method invocation on the dependency.
 
