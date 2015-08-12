@@ -12,10 +12,6 @@ function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { 'd
 
 function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError('Cannot call a class as a function'); } }
 
-require('babel/polyfill');
-
-// FIXME: remove once dependency on babel is dropped
-
 var _dependency = require('./dependency');
 
 var _dependency2 = _interopRequireDefault(_dependency);

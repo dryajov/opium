@@ -6,7 +6,8 @@ module.exports = function (karma) {
         frameworks: ['jasmine', 'browserify'],
 
         files: [
-            '../.tmp/test/specs.js'
+            '../.tmp/test/specs.js',
+            '../node_modules/karma-babel-preprocessor/node_modules/babel-core/browser-polyfill.js'
         ],
 
         reporters: ['dots'],
