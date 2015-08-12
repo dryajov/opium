@@ -1,6 +1,6 @@
 {
   "name": "opium-ioc",
-  "version": "0.0.8",
+  "version": "0.0.9",
   "main": "opium-es5/scripts/opium.js",
   "private": false,
   "license": "MIT",
