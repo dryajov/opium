@@ -13,8 +13,7 @@
   },
   "scripts": {
     "dist": "NODE_ENV=production gulp dist",
-    "test": "gulp build test",
-    "prepublish": "gulp transpile"
+    "test": "gulp build test"
   },
   "devDependencies": {
     "babel": "^5.6.14",
