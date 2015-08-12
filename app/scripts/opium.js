@@ -1,4 +1,7 @@
 /*jshint unused:false*/
+
+import 'babel/polyfill'; // FIXME: remove once dependency on babel is dropped
+
 import Dependency from './dependency';
 import PropertyInjector from './injectors/property-injector';
 import ConstructorInjector from './injectors/constructor-injector';

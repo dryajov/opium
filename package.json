@@ -1,7 +1,7 @@
 {
     "name": "opium-ioc",
     "version": "0.0.5",
-    "main": "app/scripts/opium.js",
+    "main": "opium-es5/scripts/opium.js",
     "private": false,
     "license": "MIT",
     "repository": {
@@ -13,7 +13,8 @@
     },
     "scripts": {
         "dist": "NODE_ENV=production gulp dist",
-        "test": "gulp build test"
+        "test": "gulp build test",
+        "prepublish": "gulp transpile"
     },
     "devDependencies": {
         "babel": "^5.6.14",
@@ -25,6 +26,7 @@
         "debowerify": "^0.8.1",
         "gulp": "3.8.7",
         "gulp-autoprefixer": "^0.0.10",
+        "gulp-babel": "^5.2.0",
         "gulp-cache": "^0.2.2",
         "gulp-changed": "^1.0.0",
         "gulp-concat": "^2.3.5",
@@ -38,6 +40,7 @@
         "gulp-rev": "^1.1.0",
         "gulp-rimraf": "^0.1.0",
         "gulp-size": "^1.1.0",
+        "gulp-sourcemaps": "^1.5.2",
         "gulp-uglify": "^1.0.1",
         "gulp-util": "^3.0.1",
         "jasmine": "^2.3.1",
@@ -56,7 +59,9 @@
         "vinyl-source-stream": "^0.1.1"
     },
     "browserify": {
-        "transform": ["babelify"]
+        "transform": [
+            "babelify"
+        ]
     },
     "keywords": [
         "IoC",
