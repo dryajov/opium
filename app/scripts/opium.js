@@ -1,6 +1,6 @@
 /*jshint unused:false*/
 
-require("babel/polyfill");
+import 'babel/polyfill';
 
 import Dependency from './dependency';
 import PropertyInjector from './injectors/property-injector';

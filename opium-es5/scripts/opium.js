@@ -12,6 +12,8 @@ function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { 'd
 
 function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError('Cannot call a class as a function'); } }
 
+require('babel/polyfill');
+
 var _dependency = require('./dependency');
 
 var _dependency2 = _interopRequireDefault(_dependency);
@@ -29,8 +31,6 @@ var _injectorsArgumentInjector = require('./injectors/argument-injector');
 var _injectorsArgumentInjector2 = _interopRequireDefault(_injectorsArgumentInjector);
 
 var _consts = require('./consts');
-
-require("babel/polyfill");
 
 var Opium = (function () {
     function Opium() {
