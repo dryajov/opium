@@ -1,7 +1,7 @@
 {
   "name": "opium-ioc",
   "version": "0.0.19",
-  "main": "opium-es5/scripts/opium.js",
+  "main": "lib/scripts/opium.js",
   "private": false,
   "license": "MIT",
   "repository": {
@@ -17,7 +17,6 @@
     "preversion": "gulp"
   },
   "devDependencies": {
-    "babel": "^5.6.14",
     "babelify": "^6.1.2",
     "browserify": "^5.12.1",
     "browserify-shim": "^3.7.0",
@@ -70,5 +69,8 @@
     "inversion of control",
     "es6 IoC",
     "es6 DI"
-  ]
+  ],
+  "dependencies": {
+    "babel": "^5.8.21"
+  }
 }
