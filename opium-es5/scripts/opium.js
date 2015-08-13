@@ -30,6 +30,8 @@ var _injectorsArgumentInjector2 = _interopRequireDefault(_injectorsArgumentInjec
 
 var _consts = require('./consts');
 
+require("babel/polyfill");
+
 var Opium = (function () {
     function Opium() {
         var name = arguments.length <= 0 || arguments[0] === undefined ? 'default' : arguments[0];
