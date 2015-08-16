@@ -19,8 +19,13 @@ export default class ArgumentInjector extends Injector {
      */
     inject(dep) {
         let allDeps = super.inject(dep);
+        let args = allDeps ? allDeps.map((d) => d.injected) : null;
+
+        if (dep.args) {
+            args = args.concat(dep.args) || dep.args;
+        }
 
         // inject as parameters
-        return dep.dep.apply(dep.dep, allDeps ? allDeps.map((d) => d.injected) : null);
+        return dep.dep.apply(dep.dep, args);
     }
 }

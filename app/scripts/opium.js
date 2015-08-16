@@ -39,9 +39,10 @@ export default class Opium {
      * @param name - Name to register this dependency with
      * @param type - The type that this dependency is going to be registered with
      * @param deps - An array of dependencies to be resolved before this dependency is created
-     * @param options - An options object to configure this dependency
+     * @param lifecycle - Lifecycle of this dependency
+     * @param args - An array of addition arguments to be passed as is to the constructor of the type
      */
-    registerType(name, type, deps = null, lifecycle = null) {
+    registerType(name, type, deps = null, lifecycle = null, args = null) {
         this.register(name,
             type,
             deps,
@@ -55,9 +56,10 @@ export default class Opium {
      * @param name - Name to register this dependency with
      * @param factory - The factory that will be used to create the dependency
      * @param deps - An array of dependencies to be resolved before this factory is called
-     * @param options - An options object to configure this dependency
+     * @param lifecycle - Lifecycle of this dependency
+     * @param args - An array of addition arguments to be passed as is to the factory function
      */
-    registerFactory(name, factory, deps = null, lifecycle = null) {
+    registerFactory(name, factory, deps = null, lifecycle = null, args = null) {
         this.register(name,
             factory,
             deps,
@@ -68,10 +70,10 @@ export default class Opium {
     /**
      * Register an instance (a concrete object). By default, instance dependencies use property/setter injection.
      *
-     * @param name
-     * @param instance
-     * @param deps
-     * @param options
+     * @param name - Name to register this dependency with
+     * @param instance - The instance to register
+     * @param deps - An array of dependencies to be resolved before this factory is called
+     * @param lifecycle - Lifecycle of this dependency
      */
     registerInstance(name, instance, deps = null, lifecycle = null) {
         this.register(name,
@@ -90,14 +92,17 @@ export default class Opium {
      * @param deps - An array of dependencies to be resolved before this dependency is injected.
      * @param injector - The injector to be used in order to perform the injection of the dependencies.
      * @param lifecycle - The lifecycle for this dependency {SINGLETON, PROTOTYPE}
+     * @param args - An array of addition arguments to be passed as is to the dependency.
+     *                NOTE: Only applies to constructor or argument injectors
      */
-    register(name, dep, deps, injector, lifecycle) {
+    register(name, dep, deps, injector, lifecycle, args) {
         this.registry.set(name, new Dependency(name,
             dep,
             deps,
             this.registry,
             injector,
-            lifecycle));
+            lifecycle,
+            args));
     }
 
     /**

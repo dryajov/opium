@@ -219,4 +219,19 @@ describe('opium', () => {
             expect(injectedType.factoryVal[1]).toBe('param 2');
         })
     });
+
+    describe('error handling', () => {
+        let opium;
+        beforeEach(() => {
+            opium = new Opium();
+        });
+
+        it('should fail circular dependency', () => {
+            try {
+                opium.registerInstance('instance1', {}, ['instance1']);
+            } catch (e) {
+                expect(e).toEqual(new Error(`Can't inject instance1 into instance1`));
+            };
+        });
+    });
 });

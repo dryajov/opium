@@ -22,12 +22,13 @@ export default class Dependency {
      * @param injector - The injector to be used
      * @param lifecycle - The lifecycle of the depepndency
      */
-    constructor(name, dep, deps, registry, injector, lifecycle) {
+    constructor(name, dep, deps, registry, injector, lifecycle, args) {
         this.name = name;
         this.dep = dep;
         this.registry = registry;
         this.injector = injector;
         this.lifecycle = lifecycle;
+        this.args = args;
 
         this.deps = deps;
         this.injected = null;

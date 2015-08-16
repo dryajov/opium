@@ -11,16 +11,16 @@ module.exports = function (karma) {
 
         reporters: ['dots'],
 
-        //preprocessors: {
-        //    'test/**/*Spec.js': ['babel']
-        //},
+        preprocessors: {
+            'test/**/*Spec.js': ['babel']
+        },
 
         browsers: ['PhantomJS'],
 
         logLevel: 'LOG_DEBUG',
 
         singleRun: true,
-        autoWatch: false,
+        autoWatch: true,
 
         // browserify configuration
         browserify: {
