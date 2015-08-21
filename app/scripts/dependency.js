@@ -32,6 +32,7 @@ export default class Dependency {
 
         this.deps = deps;
         this.injected = null;
+        this.hasInjected = false;
 
         if (this.deps && this.deps.filter((depName) => {return this.name === depName}).length) {
             throw new Error(`Can't inject ${this.name} into ${this.name}`);
@@ -44,8 +45,9 @@ export default class Dependency {
      * @returns {Dependency.injected|*} - Returns the result of performing the injection cycle
      */
     inject() {
-        if (!this.injected || this.lifecycle === PROTOTYPE) {
-            this.injected = this.injector.inject(this) || this.dep;
+        if (!this.hasInjected || this.lifecycle === PROTOTYPE) {
+            this.injected = this.injector.inject(this);
+            this.hasInjected = true;
         }
 
         return this.injected;

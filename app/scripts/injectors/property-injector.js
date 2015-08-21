@@ -23,7 +23,7 @@ export default class PropertyInjector extends Injector {
         let allDeps = super.inject(dep);
 
         if (!allDeps) {
-            return null;
+            return dep.dep;
         }
 
         allDeps.forEach((depDep) => {
