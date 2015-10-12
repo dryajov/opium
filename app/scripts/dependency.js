@@ -21,6 +21,7 @@ export default class Dependency {
      * @param registry - The global dep registry
      * @param injector - The injector to be used
      * @param lifecycle - The lifecycle of the depepndency
+     * @param args - The arguments to pass as is, to constructors and factories
      */
     constructor(name, dep, deps, registry, injector, lifecycle, args) {
         this.name = name;
