@@ -20,7 +20,7 @@ export default class ConstructorInjector extends Injector {
      */
     inject(dep) {
         let allDeps = super.inject(dep);
-        let args = allDeps ? allDeps.map((d) => d.injected) : null;
+        let args = allDeps ? allDeps.map((d) => d.injected) : [];
 
         if (dep.args) {
             args = args.concat(dep.args) || dep.args;
