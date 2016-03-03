@@ -231,7 +231,7 @@ describe('opium', () => {
                 opium.registerInstance('instance1', {}, ['instance1']);
             } catch (e) {
                 expect(e).toEqual(new Error(`Can't inject instance1 into instance1`));
-            };
+            }
         });
     });
 });

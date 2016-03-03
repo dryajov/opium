@@ -18,7 +18,7 @@ export default class Injector {
      */
     inject(dep) {
         var allDeps = dep.resolve();
-        if (!allDeps.length) {
+        if (!allDeps.length > 0) {
             return;
         }
 
