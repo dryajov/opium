@@ -11,8 +11,11 @@ Opium - DI for the masses.
 
 ##### es6
 ```javascript
-import Opium from 'opium-ioc';
-import {SINGLETON, PROTOTYPE} from 'opium-ioc/consts';
+import {
+    Opium, 
+    SINGLETON, 
+    PROTOTYPE
+} from 'opium-ioc';
 
 opium.registerInstance('param1', 'param 1');
 opium.registerInstance('param2', 'param 2');
@@ -33,8 +36,9 @@ console.log(injected[0], injected[1], injected[2])
 
 ##### es5
 ```javascript
-var Opium = require('opium-ioc');
-var consts = require('opium-ioc/app/scripts/consts');
+var Opium = require('opium-ioc').Opium;
+var SINGLETON = require('opium-ioc').SINGLETON;
+var PROTOTYPE = require('opium-ioc').PROTOTYPE;
 
 var opium = new Opium();
 opium.registerInstance('param1', 'param 1');
