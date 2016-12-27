@@ -1,31 +1,31 @@
 'use strict';
 
 module.exports = function (karma) {
-    karma.set({
+  karma.set({
 
-        frameworks: ['jasmine', 'browserify'],
+    frameworks: ['jasmine', 'browserify'],
 
-        files: [
-            '../.tmp/test/specs.js'
-        ],
+    files: [
+      '../.tmp/test/specs.js'
+    ],
 
-        reporters: ['dots'],
+    reporters: ['dots'],
 
-        preprocessors: {
-            'test/**/*Spec.js': ['babel']
-        },
+    preprocessors: {
+      'test/**/*Spec.js': ['babel']
+    },
 
-        browsers: ['PhantomJS'],
+    browsers: ['PhantomJS'],
 
-        logLevel: 'LOG_DEBUG',
+    logLevel: 'LOG_DEBUG',
 
-        singleRun: true,
-        autoWatch: false,
+    singleRun: true,
+    autoWatch: false,
 
-        // browserify configuration
-        browserify: {
-            debug: true,
-            transform: ['browserify-shim']
-        }
-    });
+    // browserify configuration
+    browserify: {
+      debug: true,
+      transform: ['browserify-shim']
+    }
+  });
 };

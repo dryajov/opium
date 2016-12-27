@@ -2,6 +2,8 @@
  * Created by dmitriy.ryajov on 7/1/15.
  */
 
+import 'babel-polyfill';
+
 // Lifecycle
 export const SINGLETON = 0;
 export const PROTOTYPE = 1;

@@ -11,21 +11,21 @@ import Injector from '../injector';
  */
 export default class ArgumentInjector extends Injector {
 
-    /**
-     * Inject de dependency by calling dependency.apply(dependency, arguments)
-     *
-     * @param dep
-     * @returns {*}
-     */
-    inject(dep) {
-        let allDeps = super.inject(dep);
-        let args = allDeps ? allDeps.map((d) => d.injected) : null;
+  /**
+   * Inject de dependency by calling dependency.apply(dependency, arguments)
+   *
+   * @param dep
+   * @returns {*}
+   */
+  inject(dep) {
+    let allDeps = super.inject(dep);
+    let args = allDeps ? allDeps.map((d) => d.injected) : null;
 
-        if (dep.args) {
-            args = args.concat(dep.args) || dep.args;
-        }
-
-        // inject as parameters
-        return dep.dep.apply(dep.dep, args);
+    if (dep.args) {
+      args = args.concat(dep.args) || dep.args;
     }
+
+    // inject as parameters
+    return dep.dep.apply(dep.dep, args);
+  }
 }
