@@ -4,6 +4,6 @@ var gulp = require('gulp');
 var rev = require('gulp-rev');
 
 // Build
-gulp.task('build', ['vendor', 'browserify', 'transpile'], function() {
+gulp.task('build', ['vendor', 'browserify', 'transpile'], function () {
 
 });

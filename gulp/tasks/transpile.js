@@ -8,10 +8,10 @@ var babel = require("gulp-babel");
 var concat = require("gulp-concat");
 
 gulp.task("transpile", function () {
-    return gulp.src("app/**/*.js")
-        .pipe(sourcemaps.init())
-        .pipe(babel())
-        .pipe(sourcemaps.write("."))
-        .pipe(gulp.dest("lib"));
+  return gulp.src("app/**/*.js")
+    .pipe(sourcemaps.init())
+    .pipe(babel())
+    .pipe(sourcemaps.write("."))
+    .pipe(gulp.dest("lib"));
 
 });

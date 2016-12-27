@@ -2,7 +2,7 @@
  * Created by dmitriy.ryajov on 7/17/15.
  */
 
-import {TYPE, FACTORY, INSTANCE, SINGLETON, PROTOTYPE} from '../consts';
+import {TYPE, FACTORY, INSTANCE, SINGLETON} from '../consts';
 
 /**
  * A resolver is an abstract helper class that allows specifying your own wiring logic.
@@ -24,58 +24,59 @@ import {TYPE, FACTORY, INSTANCE, SINGLETON, PROTOTYPE} from '../consts';
  */
 export default class Resolver {
 
-    /**
-     * Construct a resolver
-     *
-     * @param injector - an instance of opium-ioc compatible object
-     */
-    constructor(injector) {
-        this.injector = injector;
-    }
+  /**
+   * Construct a resolver
+   *
+   * @param injector - an instance of opium-ioc compatible object
+   */
+  constructor(injector) {
+    this.injector = injector;
+  }
 
-    /**
-     * Register a dependency
-     *
-     * @param name - dependency name
-     * @param dep - the dependency to be registered
-     * @param options - options object, by default expects type=[TYPE|FACTORY|INSTANCE]
-     *                  and lifecycle=[SINGLETON|PROTOTYPE] to be defined. Both are defaulted
-     *                  to INSTANCE and SINGLETON respectively.
-     */
-    register(name, dep, options = {}) {
-        let deps = this.resolve(dep);
-        let type = options.type || INSTANCE;
-        let lifecycle = options.lifecycle || SINGLETON;
-        if (deps) {
-            switch(type) {
-                case TYPE: {
-                    this.injector.registerType(name, dep, deps, lifecycle);
-                    break;
-                }
-
-                case FACTORY: {
-                    this.injector.registerFactory(name, dep, deps, lifecycle);
-                    break;
-                }
-
-                case INSTANCE: {
-                    this.injector.registerInstance(name, dep, deps, lifecycle);
-                    break;
-                }
-
-                default: throw(`Unknown type ${type}`);
-
-            }
+  /**
+   * Register a dependency
+   *
+   * @param name - dependency name
+   * @param dep - the dependency to be registered
+   * @param options - options object, by default expects type=[TYPE|FACTORY|INSTANCE]
+   *                  and lifecycle=[SINGLETON|PROTOTYPE] to be defined. Both are defaulted
+   *                  to INSTANCE and SINGLETON respectively.
+   */
+  register(name, dep, options = {}) {
+    let deps = this.resolve(dep);
+    let type = options.type || INSTANCE;
+    let lifecycle = options.lifecycle || SINGLETON;
+    if (deps) {
+      switch (type) {
+        case TYPE: {
+          this.injector.registerType(name, dep, deps, lifecycle);
+          break;
         }
-    }
 
-    /**
-     * Resolve dependency names from the passed in dependency. By default, its called
-     * right before registering a dependency by the register method.
-     *
-     * @param dep
-     */
-    resolve(dep) {
-        throw 'method unimplemented!';
+        case FACTORY: {
+          this.injector.registerFactory(name, dep, deps, lifecycle);
+          break;
+        }
+
+        case INSTANCE: {
+          this.injector.registerInstance(name, dep, deps, lifecycle);
+          break;
+        }
+
+        default:
+          throw(`Unknown type ${type}`);
+
+      }
     }
+  }
+
+  /**
+   * Resolve dependency names from the passed in dependency. By default, its called
+   * right before registering a dependency by the register method.
+   *
+   * @param dep
+   */
+  resolve(dep) {
+    throw 'method unimplemented!';
+  }
 }
