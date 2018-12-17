@@ -16,13 +16,13 @@ export default class Injector {
    * @param dep - the dependency to be injected
    * @returns {*}
    */
-  inject(dep) {
-    var allDeps = dep.resolve();
+  inject (dep) {
+    var allDeps = dep.resolve()
     if (allDeps.length <= 0) {
-      return;
+      return
     }
 
-    allDeps.forEach((depDep) => depDep.inject());
-    return allDeps;
+    allDeps.forEach((depDep) => depDep.inject())
+    return allDeps
   }
 }

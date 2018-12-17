@@ -1,13 +1,15 @@
-'use strict';
+'use strict'
 
-var browserify = require('browserify');
-var config = require('../config');
-var gulp = require('gulp');
-var debug = require('gulp-debug');
-var rename = require('gulp-rename');
-var rev = require('gulp-rev');
-var source = require('vinyl-source-stream');
-var babelify = require("babelify");
+const browserify = require('browserify')
+const config = require('../config')
+const gulp = require('gulp')
+const debug = require('gulp-debug')
+const rename = require('gulp-rename')
+const rev = require('gulp-rev')
+const source = require('vinyl-source-stream')
+const babelify = require('babelify')
+const glob = require('glob')
+const path = require('path')
 
 // Vendor
 gulp.task('vendor', function () {
@@ -15,8 +17,8 @@ gulp.task('vendor', function () {
     .transform(babelify)
     .bundle()
     .pipe(source('vendor.js'))
-    .pipe(gulp.dest(config.dist + '/scripts/'));
-});
+    .pipe(gulp.dest(config.dist + '/scripts/'))
+})
 
 // Browserify
 gulp.task('browserify', function () {
@@ -25,22 +27,24 @@ gulp.task('browserify', function () {
     standalone: 'Opium'
   })
     .transform(babelify)
-    .add('./app/scripts/opium.js')
+    .add('./src/opium.js')
     .bundle()
     .pipe(source('main.js'))
-    .pipe(gulp.dest(config.dist + '/scripts/'));
-});
+    .pipe(gulp.dest(config.dist + '/scripts/'))
+})
 
 // Browserify
 gulp.task('browserify-test', ['browserify', 'vendor'], function () {
-  return browserify({debug: true})
+  const files = glob.sync(path.join(__dirname, '/../../test/**/*.spec.js'))
+  console.dir(files)
+  return browserify({ debug: true })
     .require('babel-polyfill')
     .transform(babelify)
-    .add(__dirname + '/../../test/specs.js')
+    .add(files)
     .bundle()
     .pipe(source('specs.js'))
-    .pipe(gulp.dest(config.dist + '/test/'));
-});
+    .pipe(gulp.dest(config.dist + '/test/'))
+})
 
 // Script Dist
 gulp.task('scripts:dist', function () {
@@ -53,5 +57,5 @@ gulp.task('scripts:dist', function () {
     .pipe(gulp.dest('dist'))
     .pipe(rev.manifest())
     .pipe(rename('script-manifest.json'))
-    .pipe(gulp.dest('dist'));
-});
+    .pipe(gulp.dest('dist'))
+})

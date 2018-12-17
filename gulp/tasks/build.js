@@ -1,9 +1,6 @@
-'use strict';
+'use strict'
 
-var gulp = require('gulp');
-var rev = require('gulp-rev');
+const gulp = require('gulp')
 
 // Build
-gulp.task('build', ['vendor', 'browserify', 'transpile'], function () {
-
-});
+gulp.task('build', ['vendor', 'browserify', 'transpile'])

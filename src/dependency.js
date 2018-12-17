@@ -2,7 +2,7 @@
  * Created by dmitriy.ryajov on 6/14/15.
  */
 
-import {SINGLETON, PROTOTYPE} from './consts';
+import { PROTOTYPE } from './consts'
 
 /**
  * A Dependency wraps any real dependency (thingy) and provides the facilities
@@ -11,7 +11,6 @@ import {SINGLETON, PROTOTYPE} from './consts';
  * calls to the inject method on it, will trigger the injection cycle.
  */
 export default class Dependency {
-
   /**
    * Construct a dependency
    *
@@ -23,22 +22,22 @@ export default class Dependency {
    * @param lifecycle - The lifecycle of the depepndency
    * @param args - The arguments to pass as is, to constructors and factories
    */
-  constructor(name, dep, deps, registry, injector, lifecycle, args) {
-    this.name = name;
-    this.dep = dep;
-    this.registry = registry;
-    this.injector = injector;
-    this.lifecycle = lifecycle;
-    this.args = args;
+  constructor (name, dep, deps, registry, injector, lifecycle, args) {
+    this.name = name
+    this.dep = dep
+    this.registry = registry
+    this.injector = injector
+    this.lifecycle = lifecycle
+    this.args = args
 
-    this.deps = deps;
-    this.injected = null;
-    this.hasInjected = false;
+    this.deps = deps
+    this.injected = null
+    this.hasInjected = false
 
     if (this.deps && this.deps.filter((depName) => {
-        return this.name === depName
-      }).length) {
-      throw new Error(`Can't inject ${this.name} into ${this.name}`);
+      return this.name === depName
+    }).length) {
+      throw new Error(`Can't inject ${this.name} into ${this.name}`)
     }
   }
 
@@ -47,13 +46,13 @@ export default class Dependency {
    *
    * @returns {Dependency.injected|*} - Returns the result of performing the injection cycle
    */
-  inject() {
+  inject () {
     if (!this.hasInjected || this.lifecycle === PROTOTYPE) {
-      this.injected = this.injector.inject(this);
-      this.hasInjected = true;
+      this.injected = this.injector.inject(this)
+      this.hasInjected = true
     }
 
-    return this.injected;
+    return this.injected
   }
 
   /**
@@ -61,14 +60,14 @@ export default class Dependency {
    *
    * @returns {Array}
    */
-  resolve() {
-    let dependencies = [];
+  resolve () {
+    let dependencies = []
     if (this.deps) {
       for (let name of this.deps) {
-        dependencies.push(this.registry.get(name));
+        dependencies.push(this.registry.get(name))
       }
     }
 
-    return dependencies;
+    return dependencies
   }
 }

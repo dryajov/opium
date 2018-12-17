@@ -2,7 +2,7 @@
  * Created by dmitriy.ryajov on 6/27/15.
  */
 
-import Injector from '../injector';
+import Injector from '../injector'
 
 /**
  * This class will perform constructor injection, by instantiating
@@ -11,27 +11,26 @@ import Injector from '../injector';
  * or an ES6+ class.
  */
 export default class ConstructorInjector extends Injector {
-
   /**
    * Inject the dependency by calling class Reflect.construct(dependency, arguments)
    *
    * @param dep
    * @returns {*}
    */
-  inject(dep) {
-    let allDeps = super.inject(dep);
-    let args = allDeps ? allDeps.map((d) => d.injected) : [];
+  inject (dep) {
+    let allDeps = super.inject(dep)
+    let args = allDeps ? allDeps.map((d) => d.injected) : []
 
     if (dep.args) {
-      args = args.concat(dep.args) || dep.args;
+      args = args.concat(dep.args) || dep.args
     }
 
     // inject as constructor params
-    return this._newCall(dep.dep, args);
+    return this._newCall(dep.dep, args)
   }
 
-  _newCall(Clazz, args) {
-    /*jshint -W058 */
-    return Reflect.construct(Clazz, args);
+  _newCall (Clazz, args) {
+    /* jshint -W058 */
+    return Reflect.construct(Clazz, args)
   }
 }
