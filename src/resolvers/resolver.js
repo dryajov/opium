@@ -2,7 +2,7 @@
  * Created by dmitriy.ryajov on 7/17/15.
  */
 
-import {TYPE, FACTORY, INSTANCE, SINGLETON} from '../consts';
+import {TYPE, FACTORY, INSTANCE, SINGLETON} from '../consts'
 
 /**
  * A resolver is an abstract helper class that allows specifying your own wiring logic.
@@ -23,14 +23,13 @@ import {TYPE, FACTORY, INSTANCE, SINGLETON} from '../consts';
  * the programmatic API directly.
  */
 export default class Resolver {
-
   /**
    * Construct a resolver
    *
    * @param injector - an instance of opium-ioc compatible object
    */
-  constructor(injector) {
-    this.injector = injector;
+  constructor (injector) {
+    this.injector = injector
   }
 
   /**
@@ -42,30 +41,29 @@ export default class Resolver {
    *                  and lifecycle=[SINGLETON|PROTOTYPE] to be defined. Both are defaulted
    *                  to INSTANCE and SINGLETON respectively.
    */
-  register(name, dep, options = {}) {
-    let deps = this.resolve(dep);
-    let type = options.type || INSTANCE;
-    let lifecycle = options.lifecycle || SINGLETON;
+  register (name, dep, options = {}) {
+    let deps = this.resolve(dep)
+    let type = options.type || INSTANCE
+    let lifecycle = options.lifecycle || SINGLETON
     if (deps) {
       switch (type) {
         case TYPE: {
-          this.injector.registerType(name, dep, deps, lifecycle);
-          break;
+          this.injector.registerType(name, dep, deps, lifecycle)
+          break
         }
 
         case FACTORY: {
-          this.injector.registerFactory(name, dep, deps, lifecycle);
-          break;
+          this.injector.registerFactory(name, dep, deps, lifecycle)
+          break
         }
 
         case INSTANCE: {
-          this.injector.registerInstance(name, dep, deps, lifecycle);
-          break;
+          this.injector.registerInstance(name, dep, deps, lifecycle)
+          break
         }
 
         default:
-          throw(`Unknown type ${type}`);
-
+          throw new Error(`Unknown type ${type}`)
       }
     }
   }
@@ -76,7 +74,7 @@ export default class Resolver {
    *
    * @param dep
    */
-  resolve(dep) {
-    throw 'method unimplemented!';
+  resolve (dep) {
+    throw new Error('method unimplemented!')
   }
 }

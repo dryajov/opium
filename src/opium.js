@@ -1,39 +1,39 @@
-/*jshint unused:false*/
+/* jshint unused:false */
 
-import 'babel-polyfill';
+import 'babel-polyfill'
 
-import Dependency from './dependency';
-import Injector   from './injector';
+import Dependency from './dependency'
+import Injector from './injector'
 
 import {
   PropertyInjector,
   ConstructorInjector,
   ArgumentInjector
-} from './injectors';
+} from './injectors'
 
 import {
   SINGLETON,
   PROTOTYPE,
   TYPE,
   FACTORY,
-  INSTANCE,
-} from './consts';
+  INSTANCE
+} from './consts'
 
-import {PropResolver, Resolver}   from './resolvers';
+import {PropResolver, Resolver} from './resolvers'
 
 class Opium {
-  constructor(name = 'default', lifeCycle = SINGLETON) {
-    this.name = name;
-    this.registry = new Map();
-    this.lifeCycle = lifeCycle;
+  constructor (name = 'default', lifeCycle = SINGLETON) {
+    this.name = name
+    this.registry = new Map()
+    this.lifeCycle = lifeCycle
   }
 
-  get defaultLifecycle() {
-    return this.lifeCycle;
+  get defaultLifecycle () {
+    return this.lifeCycle
   }
 
-  set defaultLifecycle(val) {
-    this.lifeCycle = val;
+  set defaultLifecycle (val) {
+    this.lifeCycle = val
   }
 
   /**
@@ -42,8 +42,8 @@ class Opium {
    * @param name
    * @returns {*}
    */
-  getDep(name) {
-    return this.registry.get(name);
+  getDep (name) {
+    return this.registry.get(name)
   }
 
   /**
@@ -55,12 +55,12 @@ class Opium {
    * @param lifecycle - Lifecycle of this dependency
    * @param args - An array of addition arguments to be passed as is to the constructor of the type
    */
-  registerType(name, type, deps = null, lifecycle = null, args = null) {
+  registerType (name, type, deps = null, lifecycle = null, args = null) {
     this.register(name,
       type,
       deps,
       new ConstructorInjector(),
-      lifecycle || this.defaultLifecycle);
+      lifecycle || this.defaultLifecycle)
   }
 
   /**
@@ -72,12 +72,12 @@ class Opium {
    * @param lifecycle - Lifecycle of this dependency
    * @param args - An array of addition arguments to be passed as is to the factory function
    */
-  registerFactory(name, factory, deps = null, lifecycle = null, args = null) {
+  registerFactory (name, factory, deps = null, lifecycle = null, args = null) {
     this.register(name,
       factory,
       deps,
       new ArgumentInjector(),
-      lifecycle || this.defaultLifecycle);
+      lifecycle || this.defaultLifecycle)
   }
 
   /**
@@ -88,12 +88,12 @@ class Opium {
    * @param deps - An array of dependencies to be resolved before this factory is called
    * @param lifecycle - Lifecycle of this dependency
    */
-  registerInstance(name, instance, deps = null, lifecycle = null) {
+  registerInstance (name, instance, deps = null, lifecycle = null) {
     this.register(name,
       instance,
       deps,
       new PropertyInjector(),
-      lifecycle || this.defaultLifecycle);
+      lifecycle || this.defaultLifecycle)
   }
 
   /**
@@ -108,14 +108,14 @@ class Opium {
    * @param args - An array of addition arguments to be passed as is to the dependency.
    *                NOTE: Only applies to constructor or argument injectors
    */
-  register(name, dep, deps, injector, lifecycle, args) {
+  register (name, dep, deps, injector, lifecycle, args) {
     this.registry.set(name, new Dependency(name,
       dep,
       deps,
       this.registry,
       injector,
       lifecycle,
-      args));
+      args))
   }
 
   /**
@@ -124,21 +124,21 @@ class Opium {
    * @param name
    * @returns {*}
    */
-  unRegister(name) {
-    let dep = this.registry.get(name);
+  unRegister (name) {
+    let dep = this.registry.get(name)
     if (dep) {
-      this.registry.delete(name);
+      this.registry.delete(name)
     }
 
-    return dep;
+    return dep
   }
 
   /**
    * Inject all dependencies
    */
-  inject() {
+  inject () {
     for (let dep of this.registry.values()) {
-      dep.inject(); // inject all dependencies
+      dep.inject() // inject all dependencies
     }
   }
 }
@@ -157,4 +157,4 @@ export {
   ArgumentInjector,
   Injector,
   Opium
-};
+}

@@ -1,7 +1,7 @@
-'use strict';
+'use strict'
 
-var gulp = require('gulp');
+const gulp = require('gulp')
 
 // Default task
 gulp.task('default', ['clean', 'build', 'test'], function () {
-});
+})

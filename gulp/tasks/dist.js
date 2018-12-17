@@ -1,7 +1,7 @@
-'use strict';
+'use strict'
 
-var gulp = require('gulp');
-var rev = require('gulp-rev');
+const gulp = require('gulp')
+const rev = require('gulp-rev')
 
 // Build
 gulp.task('dist', ['vendor', 'browserify'], function () {
@@ -10,5 +10,5 @@ gulp.task('dist', ['vendor', 'browserify'], function () {
     .pipe(rev())
     .pipe(gulp.dest('dist'))
     .pipe(rev.manifest())
-    .pipe(gulp.dest('dist'));
-});
+    .pipe(gulp.dest('dist'))
+})

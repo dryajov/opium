@@ -1,4 +1,4 @@
-'use strict';
+'use strict'
 
 module.exports = function (karma) {
   karma.set({
@@ -12,12 +12,12 @@ module.exports = function (karma) {
     reporters: ['dots'],
 
     preprocessors: {
-      'test/**/*Spec.js': ['babel']
+      'test/*.spec.js': ['babel']
     },
 
-    browsers: ['PhantomJS'],
+    browsers: ['Chrome', 'Firefox'],
 
-    logLevel: 'LOG_DEBUG',
+    logLevel: 'DEBUG',
 
     singleRun: true,
     autoWatch: false,
@@ -27,5 +27,5 @@ module.exports = function (karma) {
       debug: true,
       transform: ['browserify-shim']
     }
-  });
-};
+  })
+}
