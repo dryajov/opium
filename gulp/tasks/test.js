@@ -5,10 +5,10 @@ const jasmine = require('gulp-jasmine')
 
 const config = require('../config')
 
-gulp.task('test-cli', () =>
-  gulp.src(path.join(config.dist, '/test/', 'specs.js'))
+gulp.task('test-cli', ['clean', 'browserify-test'], function () {
+  return gulp.src(path.join(config.dist, '/test/', 'specs.js'))
     .pipe(jasmine())
-)
+})
 
 /**
  * Run test once and exit
