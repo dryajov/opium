@@ -2,7 +2,7 @@
  * Created by dmitriy.ryajov on 7/17/15.
  */
 
-import {TYPE, FACTORY, INSTANCE, SINGLETON} from '../consts'
+const { TYPE, FACTORY, INSTANCE, SINGLETON } = require('../consts')
 
 /**
  * A resolver is an abstract helper class that allows specifying your own wiring logic.
@@ -22,7 +22,7 @@ import {TYPE, FACTORY, INSTANCE, SINGLETON} from '../consts'
  * mostly. Consider defining your own set of resolvers if this does not fit into your existing model, or using
  * the programmatic API directly.
  */
-export default class Resolver {
+class Resolver {
   /**
    * Construct a resolver
    *
@@ -42,9 +42,9 @@ export default class Resolver {
    *                  to INSTANCE and SINGLETON respectively.
    */
   register (name, dep, options = {}) {
-    let deps = this.resolve(dep)
-    let type = options.type || INSTANCE
-    let lifecycle = options.lifecycle || SINGLETON
+    const deps = this.resolve(dep)
+    const type = options.type || INSTANCE
+    const lifecycle = options.lifecycle || SINGLETON
     if (deps) {
       switch (type) {
         case TYPE: {
@@ -78,3 +78,5 @@ export default class Resolver {
     throw new Error('method unimplemented!')
   }
 }
+
+module.exports = Resolver

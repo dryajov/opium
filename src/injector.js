@@ -6,7 +6,7 @@
  * This class serves as a base class for all injector types.
  * Extend it to create a new injector type.
  */
-export default class Injector {
+class Injector {
   /**
    * Inject a dependency. This method will call inject on all
    * dependencies that it resolves from dep. This method is cascading,
@@ -16,13 +16,17 @@ export default class Injector {
    * @param dep - the dependency to be injected
    * @returns {*}
    */
-  inject (dep) {
-    var allDeps = dep.resolve()
+  async inject (dep) {
+    const _deps = dep.resolve()
+    let allDeps = await (Array.isArray(_deps) ? Promise.all(_deps) : _deps)
+
     if (allDeps.length <= 0) {
       return
     }
 
-    allDeps.forEach((depDep) => depDep.inject())
+    allDeps = await Promise.all(allDeps.map((dep) => dep.injectDeps()))
     return allDeps
   }
 }
+
+module.exports = Injector

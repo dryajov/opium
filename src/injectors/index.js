@@ -2,11 +2,11 @@
  * Created by dryajov on 12/27/16.
  */
 
-import ArgumentInjector from './argument-injector'
-import ConstructorInjector from './constructor-injector'
-import PropertyInjector from './property-injector'
+const ArgumentInjector = require('./argument-injector')
+const ConstructorInjector = require('./constructor-injector')
+const PropertyInjector = require('./property-injector')
 
-export {
+module.exports = {
   ArgumentInjector,
   ConstructorInjector,
   PropertyInjector

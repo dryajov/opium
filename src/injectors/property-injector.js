@@ -4,22 +4,24 @@
  * Default injector implements property injection
  */
 
-import Injector from '../injector'
+const Injector = require('../injector')
+
+const debug = require('debug')('property-injector')
 
 /**
  * This class will perform property injection, by matching
  * dependency names to property names. The property is expected
  * to be defined and set to null, otherwise no injection is performed.
  */
-export default class PropertyInjector extends Injector {
+class PropertyInjector extends Injector {
   /**
    * Inject the dependency by calling dependency['property name'] = dep1;
    *
    * @param dep
    * @returns {dep|*|Dependency.dep}
    */
-  inject (dep) {
-    let allDeps = super.inject(dep)
+  async inject (dep) {
+    const allDeps = await super.inject(dep)
 
     if (!allDeps) {
       return dep.dep
@@ -27,13 +29,12 @@ export default class PropertyInjector extends Injector {
 
     allDeps.forEach((depDep) => {
       if (typeof dep.dep[depDep.name] === 'undefined') {
-        console.error(`Property ${depDep.name} undefined in dependency ${dep.name}`)
-
+        debug(`Property ${depDep.name} undefined in dependency ${dep.name}`)
         return
       }
 
       if (dep.dep[depDep.name]) {
-        console.warn(`Property ${depDep.name} not null in dependency ${dep.name}`)
+        debug(`Property ${depDep.name} not null in dependency ${dep.name}`)
       }
 
       dep.dep[depDep.name] = depDep.injected // set property
@@ -42,3 +43,5 @@ export default class PropertyInjector extends Injector {
     return dep.dep
   }
 }
+
+module.exports = PropertyInjector

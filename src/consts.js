@@ -3,10 +3,10 @@
  */
 
 // Lifecycle
-export const SINGLETON = 0
-export const PROTOTYPE = 1
+exports.SINGLETON = 0
+exports.PROTOTYPE = 1
 
 // Resolver cycle
-export const TYPE = 0
-export const FACTORY = 1
-export const INSTANCE = 2
+exports.TYPE = 0
+exports.FACTORY = 1
+exports.INSTANCE = 2

@@ -2,7 +2,7 @@
  * Created by dmitriy.ryajov on 6/14/15.
  */
 
-import { PROTOTYPE } from './consts'
+const { PROTOTYPE } = require('./consts')
 
 /**
  * A Dependency wraps any real dependency (thingy) and provides the facilities
@@ -10,7 +10,7 @@ import { PROTOTYPE } from './consts'
  * to register a dependency with Opium, it will be wrapped in this object, subsequent
  * calls to the inject method on it, will trigger the injection cycle.
  */
-export default class Dependency {
+class Dependency {
   /**
    * Construct a dependency
    *
@@ -19,7 +19,7 @@ export default class Dependency {
    * @param deps - An array of dependency names
    * @param registry - The global dep registry
    * @param injector - The injector to be used
-   * @param lifecycle - The lifecycle of the depepndency
+   * @param lifecycle - The lifecycle of the dependency
    * @param args - The arguments to pass as is, to constructors and factories
    */
   constructor (name, dep, deps, registry, injector, lifecycle, args) {
@@ -44,14 +44,24 @@ export default class Dependency {
   /**
    * Perform the injection cycle according to the current dep lifecycle
    *
-   * @returns {Dependency.injected|*} - Returns the result of performing the injection cycle
+   * @returns {Dependency.injected|*} - Returns the resolved dependency object (this)
    */
-  inject () {
-    if (!this.hasInjected || this.lifecycle === PROTOTYPE) {
-      this.injected = this.injector.inject(this)
+  async injectDeps () {
+    if (this.lifecycle === PROTOTYPE || !this.hasInjected) {
+      this.injected = await this.injector.inject(this)
       this.hasInjected = true
     }
 
+    return this
+  }
+
+  /**
+   * Perform the injection cycle according to the current dep lifecycle
+   *
+   * @returns {Dependency.injected|*} - Returns the resolved dependency value
+   */
+  async inject () {
+    await this.injectDeps()
     return this.injected
   }
 
@@ -61,13 +71,9 @@ export default class Dependency {
    * @returns {Array}
    */
   resolve () {
-    let dependencies = []
-    if (this.deps) {
-      for (let name of this.deps) {
-        dependencies.push(this.registry.get(name))
-      }
-    }
-
-    return dependencies
+    const deps = this.deps || []
+    return deps.map((name) => this.registry.get(name))
   }
 }
+
+module.exports = Dependency

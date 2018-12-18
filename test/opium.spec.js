@@ -1,14 +1,16 @@
 /* eslint-env jasmine */
 
-import {
-  Opium,
-  PROTOTYPE
-} from '../src/opium'
+const chai = require('chai')
+const dirtyChai = require('dirty-chai')
+const expect = chai.expect
+chai.use(dirtyChai)
+
+const { Opium, PROTOTYPE } = require('../src')
 
 describe('opium', () => {
-  // it('should exist', function () {
-  //   expect(Opium).to.exist() // this doesn't work, since Opium class doesn't exist when transpiled
-  // })
+  it('should exist', function () {
+    expect(Opium).to.exist() // this doesn't work, since Opium class doesn't exist when transpiled
+  })
 
   describe('factory tests', () => {
     let opium
@@ -20,47 +22,94 @@ describe('opium', () => {
       opium.registerInstance('param2', 'param 2')
 
       let count = 0
-      factory = function (param1, param2) {
+      factory = (param1, param2) => {
         return [param1, param2, ++count]
       }
     })
 
-    it('factory should inject singconston', () => {
+    it('factory should inject singleton', async () => {
       opium.registerFactory('factory', factory, ['param1', 'param2'])
 
       const dep = opium.getDep('factory')
 
-      const injected = dep.inject()
-      expect(dep.name).toBe('factory')
-      expect(injected[0]).toBe('param 1')
-      expect(injected[1]).toBe('param 2')
-      expect(injected[2]).toBe(1)
+      const injected = await dep.inject()
+      expect(dep.name).to.eql('factory')
+      expect(injected[0]).to.eql('param 1')
+      expect(injected[1]).to.eql('param 2')
+      expect(injected[2]).to.eql(1)
 
-      const injected1 = dep.inject()
-      expect(injected1[0]).toBe('param 1')
-      expect(injected1[1]).toBe('param 2')
-      expect(injected1[2]).toBe(1)
+      const injected1 = await dep.inject()
+      expect(injected1[0]).to.eql('param 1')
+      expect(injected1[1]).to.eql('param 2')
+      expect(injected1[2]).to.eql(1)
     })
 
-    it('factory should inject prototype', () => {
+    it('factory should inject prototype', async () => {
       opium.registerFactory('factory', factory, ['param1', 'param2'], PROTOTYPE)
 
       const dep = opium.getDep('factory')
 
-      const injected = dep.inject()
-      expect(dep.name).toBe('factory')
-      expect(injected[0]).toBe('param 1')
-      expect(injected[1]).toBe('param 2')
-      expect(injected[2]).toBe(1)
+      const injected = await dep.inject()
+      expect(dep.name).to.eql('factory')
+      expect(injected[0]).to.eql('param 1')
+      expect(injected[1]).to.eql('param 2')
+      expect(injected[2]).to.eql(1)
 
-      const injected1 = dep.inject()
-      expect(injected1[0]).toBe('param 1')
-      expect(injected1[1]).toBe('param 2')
-      expect(injected1[2]).toBe(2)
+      const injected1 = await dep.inject()
+      expect(injected1[0]).to.eql('param 1')
+      expect(injected1[1]).to.eql('param 2')
+      expect(injected1[2]).to.eql(2)
+    })
+
+    it('factory should inject async factory method prototype', async () => {
+      let count = 0
+      opium.registerFactory('factory', async (param1, param2) => {
+        return new Promise((resolve) => {
+          return setTimeout(resolve([param1, param2, ++count]), 100)
+        })
+      },
+      ['param1', 'param2'],
+      PROTOTYPE)
+
+      const dep = opium.getDep('factory')
+
+      const injected = await dep.inject()
+      expect(dep.name).to.eql('factory')
+      expect(injected[0]).to.eql('param 1')
+      expect(injected[1]).to.eql('param 2')
+      expect(injected[2]).to.eql(1)
+
+      const injected1 = await dep.inject()
+      expect(injected1[0]).to.eql('param 1')
+      expect(injected1[1]).to.eql('param 2')
+      expect(injected1[2]).to.eql(2)
+    })
+
+    it('factory should inject async factory method singleton', async () => {
+      let count = 0
+      opium.registerFactory('factory', async (param1, param2) => {
+        return new Promise((resolve) => {
+          return setTimeout(resolve([param1, param2, ++count]), 100)
+        })
+      },
+      ['param1', 'param2'])
+
+      const dep = opium.getDep('factory')
+
+      const injected = await dep.inject()
+      expect(dep.name).to.eql('factory')
+      expect(injected[0]).to.eql('param 1')
+      expect(injected[1]).to.eql('param 2')
+      expect(injected[2]).to.eql(1)
+
+      const injected1 = await dep.inject()
+      expect(injected1[0]).to.eql('param 1')
+      expect(injected1[1]).to.eql('param 2')
+      expect(injected1[2]).to.eql(1)
     })
   })
 
-  describe('type tests', () => {
+  describe('type tests', async () => {
     let count, opium
     class MyType {
       constructor (param1, param2) {
@@ -77,38 +126,38 @@ describe('opium', () => {
       opium.registerInstance('param2', 'param 2')
     })
 
-    it('type should inject singconston', () => {
+    it('type should inject singleton', async () => {
       opium.registerType('type', MyType, ['param1', 'param2'])
 
       const dep = opium.getDep('type')
-      const injected = dep.inject()
+      const injected = await dep.inject()
 
-      expect(injected.param1).toBe('param 1')
-      expect(injected.param2).toBe('param 2')
-      expect(injected.count).toBe(1)
+      expect(injected.param1).to.eql('param 1')
+      expect(injected.param2).to.eql('param 2')
+      expect(injected.count).to.eql(1)
 
-      const injected1 = dep.inject()
+      const injected1 = await dep.inject()
 
-      expect(injected1.param1).toBe('param 1')
-      expect(injected1.param2).toBe('param 2')
-      expect(injected1.count).toBe(1)
+      expect(injected1.param1).to.eql('param 1')
+      expect(injected1.param2).to.eql('param 2')
+      expect(injected1.count).to.eql(1)
     })
 
-    it('type should inject prototype', () => {
+    it('type should inject prototype', async () => {
       opium.registerType('type', MyType, ['param1', 'param2'], PROTOTYPE)
 
       const dep = opium.getDep('type')
-      const injected = dep.inject()
+      const injected = await dep.inject()
 
-      expect(injected.param1).toBe('param 1')
-      expect(injected.param2).toBe('param 2')
-      expect(injected.count).toBe(1)
+      expect(injected.param1).to.eql('param 1')
+      expect(injected.param2).to.eql('param 2')
+      expect(injected.count).to.eql(1)
 
-      const injected1 = dep.inject()
+      const injected1 = await dep.inject()
 
-      expect(injected1.param1).toBe('param 1')
-      expect(injected1.param2).toBe('param 2')
-      expect(injected1.count).toBe(2)
+      expect(injected1.param1).to.eql('param 1')
+      expect(injected1.param2).to.eql('param 2')
+      expect(injected1.count).to.eql(2)
     })
   })
 
@@ -134,7 +183,7 @@ describe('opium', () => {
       }
     })
 
-    it('instance should inject singleton', () => {
+    it('instance should inject singleton', async () => {
       opium.registerFactory('count', factory)
 
       const instance = new MyType()
@@ -142,20 +191,20 @@ describe('opium', () => {
       opium.registerInstance('instance', instance, ['param1', 'param2', 'count'])
 
       const dep = opium.getDep('instance')
-      const injected = dep.inject()
+      const injected = await dep.inject()
 
-      expect(injected.param1).toBe('param 1')
-      expect(injected.param2).toBe('param 2')
-      expect(injected.count).toBe(1)
+      expect(injected.param1).to.eql('param 1')
+      expect(injected.param2).to.eql('param 2')
+      expect(injected.count).to.eql(1)
 
-      const injected1 = dep.inject()
+      const injected1 = await dep.inject()
 
-      expect(injected1.param1).toBe('param 1')
-      expect(injected1.param2).toBe('param 2')
-      expect(injected1.count).toBe(1)
+      expect(injected1.param1).to.eql('param 1')
+      expect(injected1.param2).to.eql('param 2')
+      expect(injected1.count).to.eql(1)
     })
 
-    it('instance should inject prototype', () => {
+    it('instance should inject prototype', async () => {
       opium.registerFactory('count', factory, ['param1', 'param2'], PROTOTYPE)
 
       const instance = new MyType()
@@ -163,17 +212,17 @@ describe('opium', () => {
       opium.registerInstance('type', instance, ['param1', 'param2', 'count'], PROTOTYPE)
 
       const dep = opium.getDep('type')
-      const injected = dep.inject()
+      const injected = await dep.inject()
 
-      expect(injected.param1).toBe('param 1')
-      expect(injected.param2).toBe('param 2')
-      expect(injected.count).toBe(1)
+      expect(injected.param1).to.eql('param 1')
+      expect(injected.param2).to.eql('param 2')
+      expect(injected.count).to.eql(1)
 
-      const injected1 = dep.inject()
+      const injected1 = await dep.inject()
 
-      expect(injected1.param1).toBe('param 1')
-      expect(injected1.param2).toBe('param 2')
-      expect(injected1.count).toBe(2)
+      expect(injected1.param1).to.eql('param 1')
+      expect(injected1.param2).to.eql('param 2')
+      expect(injected1.count).to.eql(2)
     })
   })
 
@@ -191,7 +240,7 @@ describe('opium', () => {
       opium = new Opium()
     })
 
-    it('should inject all', () => {
+    it('should inject all', async () => {
       opium.registerInstance('param1', 'param 1')
       opium.registerInstance('param2', 'param 2')
 
@@ -204,21 +253,21 @@ describe('opium', () => {
       const type = MyType
       opium.registerType('type', type, ['param1', 'param2', 'factory'])
 
-      opium.inject()
+      await opium.inject()
 
       const injectedFactory = opium.getDep('factory').injected
       const injectedType = opium.getDep('type').injected
       const injectedParam1 = opium.getDep('param1').injected
       const injectedParam2 = opium.getDep('param2').injected
 
-      expect(injectedParam1).toBe('param 1')
-      expect(injectedParam2).toBe('param 2')
-      expect(injectedFactory[0]).toBe('param 1')
-      expect(injectedFactory[1]).toBe('param 2')
-      expect(injectedType.param1).toBe('param 1')
-      expect(injectedType.param2).toBe('param 2')
-      expect(injectedType.factoryVal[0]).toBe('param 1')
-      expect(injectedType.factoryVal[1]).toBe('param 2')
+      expect(injectedParam1).to.eql('param 1')
+      expect(injectedParam2).to.eql('param 2')
+      expect(injectedFactory[0]).to.eql('param 1')
+      expect(injectedFactory[1]).to.eql('param 2')
+      expect(injectedType.param1).to.eql('param 1')
+      expect(injectedType.param2).to.eql('param 2')
+      expect(injectedType.factoryVal[0]).to.eql('param 1')
+      expect(injectedType.factoryVal[1]).to.eql('param 2')
     })
   })
 
@@ -232,7 +281,8 @@ describe('opium', () => {
       try {
         opium.registerInstance('instance1', {}, ['instance1'])
       } catch (e) {
-        expect(e).toEqual(new Error(`Can't inject instance1 into instance1`))
+        expect(e).to.be.an('error')
+        expect(e).to.match(/Can't inject instance1 into instance1/)
       }
     })
   })

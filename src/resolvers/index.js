@@ -2,7 +2,7 @@
  * Created by dryajov on 12/27/16.
  */
 
-import PropResolver from './property-resolver'
-import Resolver from './resolver'
+const PropResolver = require('./property-resolver')
+const Resolver = require('./resolver')
 
-export {PropResolver, Resolver}
+module.exports = { PropResolver, Resolver }
