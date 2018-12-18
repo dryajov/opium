@@ -14,7 +14,7 @@ class PropertyInjector extends Injector {
    * Inject the dependency by calling dependency['property name'] = dep1;
    *
    * @param {Dependency} dep
-   * @returns {dep|*|Dependency.dep}
+   * @returns {*}
    */
   async inject (dep) {
     const allDeps = await super.inject(dep)

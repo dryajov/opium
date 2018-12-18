@@ -17,11 +17,11 @@ class Opium {
     this.lifeCycle = lifeCycle
   }
 
-  get defaultLifecycle () {
+  get defaultLifeCycle () {
     return this.lifeCycle
   }
 
-  set defaultLifecycle (val) {
+  set defaultLifeCycle (val) {
     this.lifeCycle = val
   }
 
@@ -49,7 +49,7 @@ class Opium {
       type,
       deps,
       new ConstructorInjector(),
-      lifeCycle || this.defaultLifecycle)
+      lifeCycle || this.defaultLifeCycle)
   }
 
   /**
@@ -66,7 +66,7 @@ class Opium {
       factory,
       deps,
       new ArgumentInjector(),
-      lifeCycle || this.defaultLifecycle)
+      lifeCycle || this.defaultLifeCycle)
   }
 
   /**
@@ -82,7 +82,7 @@ class Opium {
       instance,
       deps,
       new PropertyInjector(),
-      lifeCycle || this.defaultLifecycle)
+      lifeCycle || this.defaultLifeCycle)
   }
 
   /**
@@ -113,7 +113,7 @@ class Opium {
    * @param {string} name
    * @returns {*}
    */
-  unRegister (name) {
+  deRegister (name) {
     const dep = this.registry.get(name)
     if (dep) {
       this.registry.delete(name)
