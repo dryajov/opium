@@ -118,6 +118,7 @@ tmp/
 local.properties
 .settings/
 .loadpath
+lib/
 
 # Eclipse Core
 .project

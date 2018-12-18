@@ -7,7 +7,7 @@ const sourcemaps = require('gulp-sourcemaps')
 const babel = require('gulp-babel')
 
 gulp.task('transpile', function () {
-  return gulp.src('app/**/*.js')
+  return gulp.src('src/**/*.js')
     .pipe(sourcemaps.init())
     .pipe(babel())
     .pipe(sourcemaps.write('.'))
