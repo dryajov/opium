@@ -17,7 +17,6 @@ const {
   INSTANCE
 } = require('./consts')
 
-const { PropResolver, Resolver } = require('./resolvers')
 const Opium = require('./opium')
 
 module.exports = {
@@ -26,8 +25,6 @@ module.exports = {
   TYPE,
   FACTORY,
   INSTANCE,
-  PropResolver,
-  Resolver,
   Dependency,
   PropertyInjector,
   ConstructorInjector,

@@ -1,6 +1,6 @@
-'use strict'
+/* eslint-env mocha */
 
-/* eslint-env jasmine */
+'use strict'
 
 const chai = require('chai')
 const dirtyChai = require('dirty-chai')
