@@ -1,6 +1,4 @@
-/**
- * Created by dmitriy.ryajov on 7/17/15.
- */
+'use strict'
 
 const { TYPE, FACTORY, INSTANCE, SINGLETON } = require('../consts')
 
@@ -26,7 +24,7 @@ class Resolver {
   /**
    * Construct a resolver
    *
-   * @param injector - an instance of opium-ioc compatible object
+   * @param {Injector} injector - an instance of opium-ioc compatible object
    */
   constructor (injector) {
     this.injector = injector
@@ -35,9 +33,9 @@ class Resolver {
   /**
    * Register a dependency
    *
-   * @param name - dependency name
-   * @param dep - the dependency to be registered
-   * @param options - options object, by default expects type=[TYPE|FACTORY|INSTANCE]
+   * @param {string} name - dependency name
+   * @param {Dependency} dep - the dependency to be registered
+   * @param {object} options - options object, by default expects type=[TYPE|FACTORY|INSTANCE]
    *                  and lifecycle=[SINGLETON|PROTOTYPE] to be defined. Both are defaulted
    *                  to INSTANCE and SINGLETON respectively.
    */
@@ -72,7 +70,7 @@ class Resolver {
    * Resolve dependency names from the passed in dependency. By default, its called
    * right before registering a dependency by the register method.
    *
-   * @param dep
+   * @param {Dependency} dep
    */
   resolve (dep) {
     throw new Error('method unimplemented!')

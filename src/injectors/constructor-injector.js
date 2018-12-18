@@ -1,6 +1,4 @@
-/**
- * Created by dmitriy.ryajov on 6/27/15.
- */
+'use strict'
 
 const Injector = require('../injector')
 
@@ -14,7 +12,7 @@ class ConstructorInjector extends Injector {
   /**
    * Inject the dependency by calling class Reflect.construct(dependency, arguments)
    *
-   * @param dep
+   * @param {Dependency} dep
    * @returns {*}
    */
   async inject (dep) {

@@ -1,8 +1,4 @@
-/**
- * Created by dmitriy.ryajov on 6/27/15.
- *
- * Default injector implements property injection
- */
+'use strict'
 
 const Injector = require('../injector')
 
@@ -17,7 +13,7 @@ class PropertyInjector extends Injector {
   /**
    * Inject the dependency by calling dependency['property name'] = dep1;
    *
-   * @param dep
+   * @param {Dependency} dep
    * @returns {dep|*|Dependency.dep}
    */
   async inject (dep) {

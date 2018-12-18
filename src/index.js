@@ -1,3 +1,5 @@
+'use strict'
+
 const Dependency = require('./dependency')
 const Injector = require('./injector')
 

@@ -1,6 +1,4 @@
-/**
- * Created by dryajov on 12/27/16.
- */
+'use strict'
 
 const ArgumentInjector = require('./argument-injector')
 const ConstructorInjector = require('./constructor-injector')

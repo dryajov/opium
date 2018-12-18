@@ -1,6 +1,4 @@
-/**
- * Created by dmitriy.ryajov on 6/27/15.
- */
+'use strict'
 
 /**
  * This class serves as a base class for all injector types.
@@ -13,7 +11,7 @@ class Injector {
    * calling it, will cause the dependency graph for you dependency to be
    * resolved.
    *
-   * @param dep - the dependency to be injected
+   * @param {Dependency} dep - the dependency to be injected
    * @returns {*}
    */
   async inject (dep) {

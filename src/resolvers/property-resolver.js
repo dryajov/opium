@@ -1,6 +1,4 @@
-/**
- * Created by dmitriy.ryajov on 7/17/15.
- */
+'use strict'
 
 const Resolver = require('./resolver')
 
@@ -8,8 +6,8 @@ class PropResolver extends Resolver {
   /**
    * Construct property resolver
    *
-   * @param injector - Injector instance to be used
-   * @param propName - Property name
+   * @param {Injector} injector - Injector instance to be used
+   * @param {string} propName - Property name
    */
   constructor (injector, propName = '$inject') {
     super(injector)
@@ -20,7 +18,7 @@ class PropResolver extends Resolver {
   /**
    * Resolve dependency names
    *
-   * @param obj - Object to resolve property for
+   * @param {object} obj - Object to resolve property for
    * @returns {*}
    */
   resolve (obj) {
