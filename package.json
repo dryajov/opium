@@ -12,10 +12,8 @@
     "node": ">=0.10.0"
   },
   "scripts": {
-    "dist": "NODE_ENV=production gulp dist",
     "test": "aegir test",
-    "lint": "aegir lint",
-    "preversion": "npx gulp"
+    "lint": "aegir lint"
   },
   "devDependencies": {
     "aegir": "^17.1.1"
