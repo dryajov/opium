@@ -29,8 +29,7 @@ class ConstructorInjector extends Injector {
   }
 
   _newCall (Clazz, args) {
-    /* jshint -W058 */
-    return Reflect.construct(Clazz, args)
+    return new Clazz(...args)
   }
 }
 
