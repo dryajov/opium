@@ -1,4 +1,4 @@
-'use strict';
+'use strict'
 // Generated on 2015-07-02 using generator-browserify 0.4.1
 
 /**
@@ -12,4 +12,4 @@
  * To add a new task, simply add a new task file to gulp/tasks.
  */
 
-require('./gulp');
+require('./gulp')
