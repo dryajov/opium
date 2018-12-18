@@ -2,9 +2,9 @@
  * Created by dmitriy.ryajov on 7/17/15.
  */
 
-import Resolver from './resolver'
+const Resolver = require('./resolver')
 
-export default class PropResolver extends Resolver {
+class PropResolver extends Resolver {
   /**
    * Construct property resolver
    *
@@ -32,3 +32,5 @@ export default class PropResolver extends Resolver {
     return obj[this.propName]
   }
 }
+
+module.exports = PropResolver

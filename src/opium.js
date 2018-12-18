@@ -1,25 +1,14 @@
 /* jshint unused:false */
 
-import 'babel-polyfill'
+const Dependency = require('./dependency')
 
-import Dependency from './dependency'
-import Injector from './injector'
-
-import {
+const {
   PropertyInjector,
   ConstructorInjector,
   ArgumentInjector
-} from './injectors'
+} = require('./injectors')
 
-import {
-  SINGLETON,
-  PROTOTYPE,
-  TYPE,
-  FACTORY,
-  INSTANCE
-} from './consts'
-
-import {PropResolver, Resolver} from './resolvers'
+const { SINGLETON } = require('./consts')
 
 class Opium {
   constructor (name = 'default', lifeCycle = SINGLETON) {
@@ -125,7 +114,7 @@ class Opium {
    * @returns {*}
    */
   unRegister (name) {
-    let dep = this.registry.get(name)
+    const dep = this.registry.get(name)
     if (dep) {
       this.registry.delete(name)
     }
@@ -136,25 +125,11 @@ class Opium {
   /**
    * Inject all dependencies
    */
-  inject () {
-    for (let dep of this.registry.values()) {
-      dep.inject() // inject all dependencies
+  async inject () {
+    for (const dep of this.registry.values()) {
+      await dep.inject() // inject all dependencies
     }
   }
 }
 
-export {
-  SINGLETON,
-  PROTOTYPE,
-  TYPE,
-  FACTORY,
-  INSTANCE,
-  PropResolver,
-  Resolver,
-  Dependency,
-  PropertyInjector,
-  ConstructorInjector,
-  ArgumentInjector,
-  Injector,
-  Opium
-}
+module.exports = Opium
