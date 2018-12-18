@@ -1,6 +1,4 @@
-/**
- * Created by dmitriy.ryajov on 7/1/15.
- */
+'use strict'
 
 // Lifecycle
 exports.SINGLETON = 0

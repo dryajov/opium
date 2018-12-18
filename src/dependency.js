@@ -1,6 +1,4 @@
-/**
- * Created by dmitriy.ryajov on 6/14/15.
- */
+'use strict'
 
 const { PROTOTYPE } = require('./consts')
 
@@ -14,20 +12,20 @@ class Dependency {
   /**
    * Construct a dependency
    *
-   * @param name - Name of the dependency
-   * @param dep - The dependency to be wrapped
-   * @param deps - An array of dependency names
-   * @param registry - The global dep registry
-   * @param injector - The injector to be used
-   * @param lifecycle - The lifecycle of the dependency
-   * @param args - The arguments to pass as is, to constructors and factories
+   * @param {string} name  - Name of the dependency
+   * @param {any} dep - The dependency to be wrapped
+   * @param {array} deps - An array of dependency names
+   * @param {map} registry - The global dep registry
+   * @param {Injector} injector  - The injector to be used
+   * @param {PROTOTYPE|SINGLETON} lifeCycle  - The life cycle of the dependency
+   * @param {array} args  - The arguments to pass as is, to constructors and factories
    */
-  constructor (name, dep, deps, registry, injector, lifecycle, args) {
+  constructor (name, dep, deps, registry, injector, lifeCycle, args) {
     this.name = name
     this.dep = dep
     this.registry = registry
     this.injector = injector
-    this.lifecycle = lifecycle
+    this.lifecycle = lifeCycle
     this.args = args
 
     this.deps = deps
