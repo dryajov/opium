@@ -73,31 +73,31 @@ In addition to dependency types, `opium` also assumes two types of dependency li
 
 ### Opium class
 
-#### *opium.getDep()*
+#### *`opium.getDep()`*
 
 Get a dependency from the IoC context. Returns a `Dependency` object, who's `inject` method can be called. Usually, this is the entry point to resolve a top level dependency graph.
 
-#### *opium.inject()*
+#### *`opium.inject()`*
 
 Triggers injection of all dependencies registered with that IoC context, by default resolution happens on a top level dependency, but in some cases it might be useful to resolve all dependencies in the the context. This could happen when there are more than one top level dependency.
 
-#### *opium.deRegister()*
+#### *`opium.deRegister()`*
 
 Remote a dependency from the IoC context.
 
-#### *opium.registerType(`name`, `Type`, `[dependencies]`, `SINGLETON|PROTOTYPE`)*
+#### *`opium.registerType(name, Type, [dependencies], SINGLETON|PROTOTYPE)`*
 
 A `type` is either a constructor function, or an ES6 class declaration. When a `type` dependency is registered, `opium` will create an instance and an pass all listed dependencies as constructor parameters, in effect performing constructor injection. Constructor parameters will be passed in the order of their declaration in the dependencies array.
 
-#### *opium.registerFactory(`name`, `function(){}`, `[dependencies]`, `SINGLETON|PROTOTYPE`)*
+#### *`opium.registerFactory(name, ()=>{}, [dependencies], SINGLETON|PROTOTYPE)`*
 
 When a `factory` dependency is registered, `opium` will invoke the factory and an pass all listed dependencies as function arguments, in effect performing argument injection.  Dependencies will be passed in the order of declaration in the dependencies array.
 
-#### *opium.registerInstance(`name`, `Object.create()`, `[dependencies]`, `SINGLETON|PROTOTYPE`)*
+#### *`opium.registerInstance(name, new MyClass(), [dependencies], SINGLETON|PROTOTYPE)`*
 
 When an `instance` dependency is registered, `opium` will look for, and set properties that match the name of dependencies listed in the dependencies array, in effect performing property injection. If the property is not defined, it will be defined by opium. _If debug logging is enabled a warning will be printed._
 
-#### *opium.register(`name`, `dep,` `deps`, `injector`, `lifecycle`)*
+#### *`opium.register(name, dep, [], injector, SINGLETON|PROTOTYPE)`*
 
 This is the core method that all the `register*` methods call. In addition to the params that those methods expect, it also expects an instance  of an injector type. There are three default injector types that are used by each `register*` method respectively - `ArgumentInjector`, `ConstructorInjector` and `PropertyInjector`. Each of this injectors will treat the dependency in a well defined manner and would most likely not work correctly if mixed up. For example, although it will work, there are very few cases for setting properties on a bare types, if registered with a `PropertyInjector`.
 
@@ -105,10 +105,10 @@ Use this method, only if you know what you're doing, for all common cases the pr
 
 ### Dependency
 
-#### *dependency.resolve()*
+#### *`dependency.resolve()`*
 
 Return an array of `Dependencies` that this `Dependency` expects. The returned `Dependencies` might or might not be injected.
 
-#### *dependency.inject()*
+#### *`dependency.inject()`*
 
 Triggers the `Dependency` graph resolution for this `Dependency` and all its `Dependencies`. Call this if you want to wire a single `Dependency`.
