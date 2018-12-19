@@ -1,7 +1,7 @@
 {
   "name": "opium-ioc",
   "version": "2.2.0",
-  "main": "lib/index.js",
+  "main": "src/index.js",
   "private": false,
   "license": "MIT",
   "repository": {
