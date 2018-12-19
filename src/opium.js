@@ -44,7 +44,7 @@ class Opium {
    * @param {SINGLETON|PROTOTYPE} lifeCycle - Life cycle of this dependency
    * @param {array} args - An array of addition arguments to be passed as is to the constructor of the type
    */
-  registerType (name, type, deps = null, lifeCycle = null, args = null) {
+  registerType (name, type, deps = [], lifeCycle = null, args = null) {
     this.register(name,
       type,
       deps,
@@ -61,7 +61,7 @@ class Opium {
    * @param {SINGLETON|PROTOTYPE} lifeCycle - Life cycle of this dependency
    * @param {array} args - An array of addition arguments to be passed as is to the factory function
    */
-  registerFactory (name, factory, deps = null, lifeCycle = null, args = null) {
+  registerFactory (name, factory, deps = [], lifeCycle = null, args = null) {
     this.register(name,
       factory,
       deps,
@@ -77,7 +77,7 @@ class Opium {
    * @param {array} deps - An array of dependencies to be resolved before this factory is called
    * @param {SINGLETON|PROTOTYPE} lifeCycle - Life cycle of this dependency
    */
-  registerInstance (name, instance, deps = null, lifeCycle = null) {
+  registerInstance (name, instance, deps = [], lifeCycle = null) {
     this.register(name,
       instance,
       deps,
