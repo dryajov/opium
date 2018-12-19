@@ -48,20 +48,7 @@ Depending on its life cycle, a dependency might be resolved once and cached for 
 
 It's important to understand, that the result of the invocation is cached, not the type/factory/instance. For example calling inject on a `type` with `PROTOTYPE` life cycle will create a new instance every time, however calling a `factory` with `SINGLETON` life cycle will cache the result of invoking the factory function and return the same result over and over again.
 
-In most cases interacting with the `Dependency` object will only happen once - when a top level dependency is resolved from the container and it's `inject()` method is invoked. This will suffice to trigger the dependency graph resolution and no subsequent interactions with it are required after the fact. It is however useful to expose it as it allows building more sophisticated or specialized dependency resolvers. In other words, it is most useful for `resolver` creators.
-
-### Resolvers
-
-A resolver is a helper class that allows specifying your own wiring logic. For example, you might want to have a JSON or an XML document describe how dependencies are wired, and bypass the programmatic API altogether.
-
-There are two phases, `register` and `resolve`. 
-
-By default, register maps a `register*` method to a type of dependency.
-The dependency types are - `TYPE`, `FACTORY`, `INSTANCE` and are looked up in the option's object type property that is passed to `register`. Register will call `resolve` just before performing registration of the dependency, and it expects an array of dependency names to be returned by it.
-
-This model should be flexible enough to allow writing resolvers for different needs and scenarios. The api has been intentionally left very generic to allow extensibility, and cater to as many different needs as possible. However, this is not considered a core part of the framework, and is provided for convenience mostly. Consider defining your own set of resolvers if this does not fit into your existing model, or using  the programmatic API directly.
-
-For an example of an existing resolver take a look at [property-resolver.js](https://github.com/dryajov/opium/blob/master/app/scripts/resolvers/property-resolver.js)
+In most cases interacting with the `Dependency` object will only happen once - when a top level dependency is resolved from the container and it's `inject()` method is invoked. This will suffice to trigger the dependency graph resolution and no subsequent interactions with it are required after the fact. It is however useful to expose it as it allows building more sophisticated or specialized dependency resolvers. In other words, it is most useful for framework creators who want to extend opium IoC with their own wiring conventions, for example those that want to have the dependency declarations in a `json` based config or, use it to power some decorator (`@inject`) syntax based approach, in languages that support it such as typescript and such.
 
 ### Types of Dependencies
 
@@ -125,13 +112,3 @@ Return an array of `Dependencies` that this `Dependency` expects. The returned `
 #### *dependency.inject()*
 
 Triggers the `Dependency` graph resolution for this `Dependency` and all its `Dependencies`. Call this if you want to wire a single `Dependency`.
-
-### Resolver
-
-#### *register(`name`, `dep`, `options = {}`)*
-
-Register a dependency.
-
-#### *resolve(`dep`)*
-
-Resolve dependency names from the passed in dependency. By default, its called right before registering a dependency by the register method.
