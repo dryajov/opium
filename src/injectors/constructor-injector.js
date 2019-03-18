@@ -10,7 +10,7 @@ const Injector = require('../injector')
  */
 class ConstructorInjector extends Injector {
   /**
-   * Inject the dependency by calling class Reflect.construct(dependency, arguments)
+   * Inject the dependency by calling `new dep(...args)`
    *
    * @param {Dependency} dep
    * @returns {*}
