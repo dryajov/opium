@@ -39,8 +39,8 @@ class Dependency {
     this.deps.forEach((depName) => {
       const d = this.registry.get(depName)
       if (d && d.deps.some((name) => name === this.name)) {
-        throw new Error(`Circular dependency detected ${this.name} ` +
-        `is required by ${d.name} which is also required by ${this.name}`)
+        throw new Error(`Circular dependency detected, '${this.name}' ` +
+        `is required by '${d.name}' which is also required by '${this.name}'`)
       }
     })
   }

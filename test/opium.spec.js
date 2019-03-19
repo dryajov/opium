@@ -342,7 +342,7 @@ describe('opium', () => {
         opium.registerInstance('instance2', {}, ['instance1'])
       } catch (e) {
         expect(e).to.be.an('error')
-        expect(e).to.match(/Circular dependency detected/)
+        expect(e).to.match(/Circular dependency detected,/)
       }
     })
 
