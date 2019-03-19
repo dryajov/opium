@@ -52,6 +52,9 @@ class Dependency {
    */
   async injectDeps () {
     if (this.lifecycle === PROTOTYPE || !this.hasInjected) {
+      // if injected is a promise, then we're still in the process
+      // of resolving this dependency, don't try injecting again until
+      // the it resolves
       if (this.injected && typeof this.injected.then === 'function') {
         return this
       }
@@ -71,6 +74,10 @@ class Dependency {
    * @returns {Dependency.injected|*} - Returns the resolved dependency value
    */
   async inject () {
+    if (this.injected && typeof this.injected.then === 'function') {
+      throw new Error(`Dependency has not finished resolving, make sure to await the inject method!`)
+    }
+
     if (this.lifecycle === PROTOTYPE) {
       // cleanup after ourself, this should be fine,
       // since inject should be called serially

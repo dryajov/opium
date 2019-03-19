@@ -110,24 +110,6 @@ describe('opium', () => {
       expect(injected1[2]).to.eql(1)
     })
 
-    it('factory should queue injects', async () => {
-      let count = 0
-      opium.registerFactory('factory', async (param1, param2) => {
-        return new Promise((resolve) => {
-          return setTimeout(resolve([param1, param2, ++count]), 1000)
-        })
-      },
-      ['param1', 'param2'])
-
-      const dep = opium.getDep('factory')
-      dep.inject() // first inject is queued
-
-      const injected1 = await dep.inject() // second inject awaits until resolved
-      expect(injected1[0]).to.eql('param 1')
-      expect(injected1[1]).to.eql('param 2')
-      expect(injected1[2]).to.eql(1)
-    })
-
     it('factory should inject with additional args', async () => {
       opium.registerFactory('factory', (param1, param2, param3) => {
         expect(param1).to.eq('param 1')
@@ -367,6 +349,23 @@ describe('opium', () => {
       } catch (e) {
         expect(e).to.be.an('error')
         expect(e).to.match(/dependencies should be an array!/)
+      }
+    })
+
+    it('async factory should throw if not awaited', async () => {
+      opium.registerFactory('factory', async () => {
+        return new Promise((resolve) => {
+          return setTimeout(resolve(), 1000)
+        })
+      })
+
+      try {
+        const dep = opium.getDep('factory')
+        dep.inject() // first inject is not awaited
+        await dep.inject() // second inject should throw
+      } catch (e) {
+        expect(e).to.be.an('error')
+        expect(e).to.match(/Dependency has not finished resolving, make sure to await the inject method!/)
       }
     })
   })
