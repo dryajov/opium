@@ -45,11 +45,17 @@ class Opium {
    * @param {array} args - An array of addition arguments to be passed as is to the constructor of the type
    */
   registerType (name, type, deps = [], lifeCycle = null, args = null) {
+    if (Array.isArray(lifeCycle)) {
+      args = lifeCycle
+      lifeCycle = this.defaultLifeCycle
+    }
+
     this.register(name,
       type,
       deps,
       new ConstructorInjector(),
-      lifeCycle || this.defaultLifeCycle)
+      lifeCycle || this.defaultLifeCycle,
+      args)
   }
 
   /**
@@ -62,11 +68,17 @@ class Opium {
    * @param {array} args - An array of addition arguments to be passed as is to the factory function
    */
   registerFactory (name, factory, deps = [], lifeCycle = null, args = null) {
+    if (Array.isArray(lifeCycle)) {
+      args = lifeCycle
+      lifeCycle = this.defaultLifeCycle
+    }
+
     this.register(name,
       factory,
       deps,
       new ArgumentInjector(),
-      lifeCycle || this.defaultLifeCycle)
+      lifeCycle || this.defaultLifeCycle,
+      args)
   }
 
   /**

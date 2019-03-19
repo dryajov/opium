@@ -32,11 +32,17 @@ class Dependency {
     this.injected = null
     this.hasInjected = false
 
-    if (this.deps && this.deps.filter((depName) => {
-      return this.name === depName
-    }).length) {
+    if (this.deps.filter((depName) => this.name === depName).length) {
       throw new Error(`Can't inject ${this.name} into ${this.name}`)
     }
+
+    this.deps.forEach((depName) => {
+      const d = this.registry.get(depName)
+      if (d && d.deps.some((name) => name === this.name)) {
+        throw new Error(`Circular dependency detected ${this.name} ` +
+        `is required by ${d.name} which is also required by ${this.name}`)
+      }
+    })
   }
 
   /**
@@ -51,7 +57,9 @@ class Dependency {
       }
 
       // eslint-disable-next-line no-console
-      this.injected = this.injector.inject(this).catch(console.error)
+      this.injected = this.injector.inject(this).catch((e) => {
+        console.error(e)
+      })
     }
 
     return this

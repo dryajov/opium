@@ -63,7 +63,7 @@ describe('opium', () => {
       expect(injected1[2]).to.eql(2)
     })
 
-    it('factory should inject async factory method prototype', async () => {
+    it('factory should inject async factory method as prototype', async () => {
       let count = 0
       opium.registerFactory('factory', async (param1, param2) => {
         return new Promise((resolve) => {
@@ -87,7 +87,7 @@ describe('opium', () => {
       expect(injected1[2]).to.eql(2)
     })
 
-    it('factory should inject async factory method singleton', async () => {
+    it('factory should inject async factory method as singleton', async () => {
       let count = 0
       opium.registerFactory('factory', async (param1, param2) => {
         return new Promise((resolve) => {
@@ -120,12 +120,48 @@ describe('opium', () => {
       ['param1', 'param2'])
 
       const dep = opium.getDep('factory')
+      dep.inject() // first inject is queued
 
-      dep.inject()
-      const injected1 = await dep.inject()
+      const injected1 = await dep.inject() // second inject awaits until resolved
       expect(injected1[0]).to.eql('param 1')
       expect(injected1[1]).to.eql('param 2')
       expect(injected1[2]).to.eql(1)
+    })
+
+    it('factory should inject with additional args', async () => {
+      opium.registerFactory('factory', (param1, param2, param3) => {
+        expect(param1).to.eq('param 1')
+        expect(param2).to.eq('param 2')
+        expect(param3).to.eq('param 3')
+
+        return [param1, param2, param3]
+      }, ['param1', 'param2'], ['param 3'])
+
+      const dep = opium.getDep('factory')
+
+      const injected = await dep.inject()
+      expect(dep.name).to.eql('factory')
+      expect(injected[0]).to.eql('param 1')
+      expect(injected[1]).to.eql('param 2')
+      expect(injected[2]).to.eql('param 3')
+    })
+
+    it('factory should inject with additional args as promises', async () => {
+      opium.registerFactory('factory', (param1, param2, param3) => {
+        expect(param1).to.eq('param 1')
+        expect(param2).to.eq('param 2')
+        expect(param3).to.eq('param 3')
+
+        return [param1, param2, param3]
+      }, ['param1', 'param2'], [Promise.resolve('param 3')])
+
+      const dep = opium.getDep('factory')
+
+      const injected = await dep.inject()
+      expect(dep.name).to.eql('factory')
+      expect(injected[0]).to.eql('param 1')
+      expect(injected[1]).to.eql('param 2')
+      expect(injected[2]).to.eql('param 3')
     })
   })
 
@@ -291,12 +327,22 @@ describe('opium', () => {
       opium = new Opium()
     })
 
-    it('should fail circular dependency', () => {
+    it('should fail injecting itself into itself', async () => {
       try {
         opium.registerInstance('instance1', {}, ['instance1'])
       } catch (e) {
         expect(e).to.be.an('error')
         expect(e).to.match(/Can't inject instance1 into instance1/)
+      }
+    })
+
+    it('should fail on circular dependencies', async () => {
+      try {
+        opium.registerInstance('instance1', {}, ['instance2'])
+        opium.registerInstance('instance2', {}, ['instance1'])
+      } catch (e) {
+        expect(e).to.be.an('error')
+        expect(e).to.match(/Circular dependency detected/)
       }
     })
 
