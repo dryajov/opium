@@ -4,38 +4,43 @@
 
 `Opium` is a dependency injection framework for javascript. The aim of `opium` is to provide the simplest possible and yet functionally complete dependency injection solution.  `Opium`'s main feature is its lack of assumptions around dependency declaration techniques such as XML, JSON or a DSL. Instead, opium relies on a clean and non opinionated api, that leaves the door open to use your own style/technique for declaring dependencies.
 
+**BREAKING CHANGE**: As of version `2.0.0`, all methods are `async` to enable async initialization. Don't forget to call `await dep.inject()`, or bad things will happen.
+
 ## Getting started
 
 `npm install --save opium-ioc`
 
 ### Usage
 
-```javascript
-const {Opium, PROTOTYPE, SINGLETON} = require('opium-ioc')
+```js
+(async () => {
+  const { Opium, PROTOTYPE, SINGLETON } = require('opium-ioc')
 
-var opium = new Opium()
+  const opium = new Opium()
 
-// register instance dependencies
-opium.registerInstance('dep1Name', 'param 1')
-opium.registerInstance('dep2Name', 'param 2')
+  // register instance dependencies
+  opium.registerInstance('dep1Name', 'param 1')
+  opium.registerInstance('dep2Name', 'param 2')
 
-let count = 0
-// make a factory function that will get 
-factory = async (dep1Name, dep2Name) => {
+  let count = 0
+  // make a factory function that will get
+  const factory = async (dep1Name, dep2Name) => {
     return [
-        dep1Name, // receives `param 1` as value
-        dep2Name, // receives `param 2` as value
-        ++count
+      dep1Name, // receives `param 1` as value
+      dep2Name, // receives `param 2` as value
+      ++count
     ]
-}
+  }
 
-// register the factory
-opium.registerFactory('factory', factory, ['dep1Name', 'dep2Name'])
+  // register the factory
+  opium.registerFactory('factory', factory, ['dep1Name', 'dep2Name'])
 
-var dep = opium.getDep('factory') // top level dep who's graph will be resolved
-var injected = dep.inject()
+  const dep = opium.getDep('factory') // top level dep who's graph will be resolved
+  const injected = await dep.inject()
 
-console.log(injected[0], injected[1], injected[2])
+  console.log(injected[0], injected[1], injected[2])
+  // prints: param 1 param 2 1
+})()
 ```
 
 ### The Dependency object
@@ -77,7 +82,7 @@ In addition to dependency types, `opium` also assumes two types of dependency li
 
 Get a dependency from the IoC context. Returns a `Dependency` object, who's `inject` method can be called. Usually, this is the entry point to resolve a top level dependency graph.
 
-#### *`opium.inject()`*
+#### *`async opium.inject()`*
 
 Triggers injection of all dependencies registered with that IoC context, by default resolution happens on a top level dependency, but in some cases it might be useful to resolve all dependencies in the the context. This could happen when there are more than one top level dependency.
 
@@ -89,7 +94,7 @@ Remote a dependency from the IoC context.
 
 A `type` is either a constructor function, or an ES6 class declaration. When a `type` dependency is registered, `opium` will create an instance and an pass all listed dependencies as constructor parameters, in effect performing constructor injection. Constructor parameters will be passed in the order of their declaration in the dependencies array.
 
-#### *`opium.registerFactory(name, ()=>{}, [dependencies], SINGLETON|PROTOTYPE)`*
+#### *`opium.registerFactory(name, async ()=>{}, [dependencies], SINGLETON|PROTOTYPE)`*
 
 When a `factory` dependency is registered, `opium` will invoke the factory and an pass all listed dependencies as function arguments, in effect performing argument injection.  Dependencies will be passed in the order of declaration in the dependencies array.
 
@@ -111,4 +116,4 @@ Return an array of `Dependencies` that this `Dependency` expects. The returned `
 
 #### *`dependency.inject()`*
 
-Triggers the `Dependency` graph resolution for this `Dependency` and all its `Dependencies`. Call this if you want to wire a single `Dependency`.
+Triggers the `Dependency` graph resolution for this `Dependency` and all its `Dependencies`. Call this if you want to wire a single `Dependency`. This method returns a `Promise` that should be awaited, otherwise the behavior is undefined.
