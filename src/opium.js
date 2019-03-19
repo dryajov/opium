@@ -98,6 +98,10 @@ class Opium {
    *                NOTE: Only applies to constructor or argument injectors
    */
   register (name, dep, deps, injector, lifeCycle, args) {
+    if (!Array.isArray(deps)) {
+      throw new Error('dependencies should be an array!')
+    }
+
     this.registry.set(name, new Dependency(name,
       dep,
       deps,

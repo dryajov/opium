@@ -91,7 +91,7 @@ describe('opium', () => {
       let count = 0
       opium.registerFactory('factory', async (param1, param2) => {
         return new Promise((resolve) => {
-          return setTimeout(resolve([param1, param2, ++count]), 100)
+          return setTimeout(resolve([param1, param2, ++count]), 1000)
         })
       },
       ['param1', 'param2'])
@@ -104,6 +104,24 @@ describe('opium', () => {
       expect(injected[1]).to.eql('param 2')
       expect(injected[2]).to.eql(1)
 
+      const injected1 = await dep.inject()
+      expect(injected1[0]).to.eql('param 1')
+      expect(injected1[1]).to.eql('param 2')
+      expect(injected1[2]).to.eql(1)
+    })
+
+    it('factory should queue injects', async () => {
+      let count = 0
+      opium.registerFactory('factory', async (param1, param2) => {
+        return new Promise((resolve) => {
+          return setTimeout(resolve([param1, param2, ++count]), 1000)
+        })
+      },
+      ['param1', 'param2'])
+
+      const dep = opium.getDep('factory')
+
+      dep.inject()
       const injected1 = await dep.inject()
       expect(injected1[0]).to.eql('param 1')
       expect(injected1[1]).to.eql('param 2')
@@ -187,10 +205,7 @@ describe('opium', () => {
 
     it('instance should inject singleton', async () => {
       opium.registerFactory('count', factory)
-
-      const instance = new MyType()
-
-      opium.registerInstance('instance', instance, ['param1', 'param2', 'count'])
+      opium.registerInstance('instance', new MyType(), ['param1', 'param2', 'count'])
 
       const dep = opium.getDep('instance')
       const injected = await dep.inject()
@@ -208,10 +223,7 @@ describe('opium', () => {
 
     it('instance should inject prototype', async () => {
       opium.registerFactory('count', factory, ['param1', 'param2'], PROTOTYPE)
-
-      const instance = new MyType()
-
-      opium.registerInstance('type', instance, ['param1', 'param2', 'count'], PROTOTYPE)
+      opium.registerInstance('type', new MyType(), ['param1', 'param2', 'count'], PROTOTYPE)
 
       const dep = opium.getDep('type')
       const injected = await dep.inject()
@@ -297,6 +309,18 @@ describe('opium', () => {
       } catch (e) {
         expect(e).to.be.an('error')
         expect(e).to.match(/no dependency with name "dependency-does-not-exist" found!/)
+      }
+    })
+
+    it('should fail if dependency is not an array', async () => {
+      try {
+        opium.registerInstance('instance1', {}, 'dependency-shoudl-fail')
+        const instDep = opium.getDep('instance1')
+        const injected = await instDep.inject()
+        expect(injected).to.not.exist()
+      } catch (e) {
+        expect(e).to.be.an('error')
+        expect(e).to.match(/dependencies should be an array!/)
       }
     })
   })

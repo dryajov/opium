@@ -1,5 +1,7 @@
 'use strict'
 
+const debug = require('debug')('opium:injector')
+
 /**
  * This class serves as a base class for all injector types.
  * Extend it to create a new injector type.
@@ -30,6 +32,8 @@ class Injector {
 
       return _dep.injectDeps()
     }))
+
+    debug('injecting dependencies for %s', dep.name)
     return allDeps
   }
 }

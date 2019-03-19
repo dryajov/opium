@@ -1,7 +1,5 @@
 'use strict'
 
-const debug = require('debug')('opium:dependency')
-
 const { PROTOTYPE } = require('./consts')
 
 /**
@@ -48,8 +46,12 @@ class Dependency {
    */
   async injectDeps () {
     if (this.lifecycle === PROTOTYPE || !this.hasInjected) {
-      this.injected = await this.injector.inject(this).catch(console.error)
-      this.hasInjected = true
+      if (this.injected && typeof this.injected.then === 'function') {
+        return this
+      }
+
+      // eslint-disable-next-line no-console
+      this.injected = this.injector.inject(this).catch(console.error)
     }
 
     return this
@@ -61,7 +63,19 @@ class Dependency {
    * @returns {Dependency.injected|*} - Returns the resolved dependency value
    */
   async inject () {
+    if (this.lifecycle === PROTOTYPE) {
+      // cleanup after ourself, this should be fine,
+      // since inject should be called serially
+      this.resolve().forEach((d) => {
+        if (d.lifecycle === PROTOTYPE) d.injected = null
+      })
+
+      this.injected = null
+    }
+
     await this.injectDeps()
+    this.injected = await this.injected
+    this.hasInjected = true
     return this.injected
   }
 

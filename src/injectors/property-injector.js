@@ -17,13 +17,14 @@ class PropertyInjector extends Injector {
    * @returns {*}
    */
   async inject (dep) {
-    const allDeps = await super.inject(dep)
+    let allDeps = await super.inject(dep)
 
     if (!allDeps) {
+      dep.injected = Promise.resolve(dep.dep)
       return dep.dep
     }
 
-    allDeps.forEach((depDep) => {
+    for (const depDep of allDeps) {
       if (!depDep) {
         debug(`Dependency ${dep.name} doesnt't exist!`)
         return
@@ -38,8 +39,8 @@ class PropertyInjector extends Injector {
         debug(`Property ${depDep.name} not null in dependency ${dep.name}`)
       }
 
-      dep.dep[depDep.name] = depDep.injected // set property
-    })
+      dep.dep[depDep.name] = await depDep.injected // set property
+    }
 
     return dep.dep
   }

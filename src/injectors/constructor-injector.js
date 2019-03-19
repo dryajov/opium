@@ -16,9 +16,9 @@ class ConstructorInjector extends Injector {
    * @returns {*}
    */
   async inject (dep) {
-    const _deps = super.inject(dep)
+    const _deps = await super.inject(dep)
     const allDeps = await (Array.isArray(_deps) ? Promise.all(_deps) : _deps)
-    let args = allDeps ? allDeps.map((d) => d && d.injected) : []
+    let args = await (allDeps ? Promise.all(allDeps.map((d) => d && d.injected)) : [])
 
     if (dep.args) {
       args = args.concat(dep.args) || dep.args
