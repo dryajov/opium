@@ -30,7 +30,7 @@ class Dependency {
     this.lifecycle = lifeCycle
     this.args = args
 
-    this.deps = deps
+    this.deps = Array.isArray(deps) ? deps : [deps]
     this.injected = null
     this.hasInjected = false
 
