@@ -2,7 +2,7 @@
 
 const Injector = require('../injector')
 
-const debug = require('debug')('property-injector')
+const debug = require('debug')('opium:property-injector')
 
 /**
  * This class will perform property injection, by matching
@@ -24,6 +24,11 @@ class PropertyInjector extends Injector {
     }
 
     allDeps.forEach((depDep) => {
+      if (!depDep) {
+        debug(`Dependency ${dep.name} doesnt't exist!`)
+        return
+      }
+
       if (typeof dep.dep[depDep.name] === 'undefined') {
         debug(`Property ${depDep.name} undefined in dependency ${dep.name}`)
         return

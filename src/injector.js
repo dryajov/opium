@@ -22,7 +22,14 @@ class Injector {
       return
     }
 
-    allDeps = await Promise.all(allDeps.map((dep) => dep.injectDeps()))
+    allDeps = await Promise.all(allDeps.map((_dep, i) => {
+      if (!_dep) {
+        throw new Error(`no dependency with name "${dep.deps[i]}" found!
+        Has it been previously registered with one of the register* methods?`)
+      }
+
+      return _dep.injectDeps()
+    }))
     return allDeps
   }
 }

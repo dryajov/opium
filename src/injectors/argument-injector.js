@@ -17,7 +17,7 @@ class ArgumentInjector extends Injector {
   async inject (dep) {
     const _deps = super.inject(dep)
     const allDeps = await (Array.isArray(_deps) ? Promise.all(_deps) : _deps)
-    let args = allDeps ? allDeps.map((d) => d.injected) : []
+    let args = allDeps ? allDeps.map((d) => d && d.injected) : []
 
     if (dep.args) {
       args = args.concat(dep.args) || dep.args

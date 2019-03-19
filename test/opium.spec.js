@@ -287,5 +287,17 @@ describe('opium', () => {
         expect(e).to.match(/Can't inject instance1 into instance1/)
       }
     })
+
+    it('should fail if dependency not registered', async () => {
+      try {
+        opium.registerInstance('instance1', {}, ['dependency-does-not-exist'])
+        const instDep = opium.getDep('instance1')
+        const injected = await instDep.inject()
+        expect(injected).to.not.exist()
+      } catch (e) {
+        expect(e).to.be.an('error')
+        expect(e).to.match(/no dependency with name "dependency-does-not-exist" found!/)
+      }
+    })
   })
 })

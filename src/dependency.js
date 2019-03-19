@@ -1,5 +1,7 @@
 'use strict'
 
+const debug = require('debug')('opium:dependency')
+
 const { PROTOTYPE } = require('./consts')
 
 /**
@@ -46,7 +48,7 @@ class Dependency {
    */
   async injectDeps () {
     if (this.lifecycle === PROTOTYPE || !this.hasInjected) {
-      this.injected = await this.injector.inject(this)
+      this.injected = await this.injector.inject(this).catch(console.error)
       this.hasInjected = true
     }
 
