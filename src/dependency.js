@@ -2,6 +2,8 @@
 
 const { PROTOTYPE } = require('./consts')
 
+const debug = require('debug')('opium:dependency')
+
 /**
  * A Dependency wraps any real dependency (thingy) and provides the facilities
  * require to perform DI on it. Whenever one of the register* methods is called
@@ -35,14 +37,6 @@ class Dependency {
     if (this.deps.filter((depName) => this.name === depName).length) {
       throw new Error(`Can't inject ${this.name} into ${this.name}`)
     }
-
-    this.deps.forEach((depName) => {
-      const d = this.registry.get(depName)
-      if (d && d.deps.some((name) => name === this.name)) {
-        throw new Error(`Circular dependency detected, '${this.name}' ` +
-        `is required by '${d.name}' which is also required by '${this.name}'`)
-      }
-    })
   }
 
   /**
@@ -54,15 +48,13 @@ class Dependency {
     if (this.lifecycle === PROTOTYPE || !this.hasInjected) {
       // if injected is a promise, then we're still in the process
       // of resolving this dependency, don't try injecting again until
-      // the it resolves
+      // it resolves
       if (this.injected && typeof this.injected.then === 'function') {
         return this
       }
 
       // eslint-disable-next-line no-console
-      this.injected = this.injector.inject(this).catch((e) => {
-        console.error(e)
-      })
+      this.injected = this.injector.inject(this).catch(debug)
     }
 
     return this

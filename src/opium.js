@@ -114,6 +114,13 @@ class Opium {
       throw new Error('dependencies should be an array!')
     }
 
+    const _dep = this.registry.get(name)
+    if (_dep) {
+      const _name = typeof _dep.constructor !== 'undefined' ? _dep.constructor : ''
+      throw new Error(`another dependency with the same name ${name}` +
+      ` is already registered by another dependency ${_name || ''}`)
+    }
+
     this.registry.set(name, new Dependency(name,
       dep,
       deps,
@@ -121,6 +128,8 @@ class Opium {
       injector,
       lifeCycle,
       args))
+
+    this._circular(this.registry.get(name))
   }
 
   /**
@@ -145,6 +154,27 @@ class Opium {
     for (const dep of this.registry.values()) {
       await dep.inject() // inject all dependencies
     }
+  }
+
+  /**
+   * Check for circular dependencies
+   *
+   * @param {Dependency} dep - the dependency to check
+   * @param {Dependency} checky - the object to check against
+   */
+  _circular (dep, checky) {
+    if (!checky) checky = dep
+    dep.deps.forEach((depName) => {
+      const d = this.registry.get(depName)
+
+      if (d && d.name === checky.name) {
+        throw new Error(`Circular dependency detected, '${checky.name}' ` +
+          `is required by '${dep.name}', that also has '${checky.name}' in its dependency graph`)
+      }
+
+      if (d) this._circular(d, checky)
+      return depName
+    })
   }
 }
 

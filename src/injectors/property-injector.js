@@ -26,7 +26,7 @@ class PropertyInjector extends Injector {
 
     for (const depDep of allDeps) {
       if (!depDep) {
-        debug(`Dependency ${dep.name} doesnt't exist!`)
+        debug(`Dependency ${dep.name} doesn't exist!`)
         return
       }
 

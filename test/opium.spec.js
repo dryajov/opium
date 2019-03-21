@@ -318,14 +318,43 @@ describe('opium', () => {
       }
     })
 
-    it('should fail on circular dependencies', async () => {
-      try {
-        opium.registerInstance('instance1', {}, ['instance2'])
-        opium.registerInstance('instance2', {}, ['instance1'])
-      } catch (e) {
-        expect(e).to.be.an('error')
-        expect(e).to.match(/Circular dependency detected,/)
-      }
+    it('should fail on simple circular dependencies for types', async () => {
+      opium.registerType('instance1', class {}, ['instance2'])
+      expect(() => opium.registerType('instance2', class { }, ['instance1']))
+        .to.throw(/Circular dependency detected, 'instance2' is required by 'instance1', that also has 'instance2' in its dependency graph/)
+    })
+
+    it('should fail on complex circular dependencies for types', async () => {
+      opium.registerType('instance1', class {}, ['instance3'])
+      opium.registerType('instance2', class {}, ['instance1'])
+      expect(() => opium.registerType('instance3', {}, ['instance2']))
+        .to.throw(/Circular dependency detected, 'instance3' is required by 'instance1', that also has 'instance3' in its dependency graph/)
+    })
+
+    it('should fail on simple circular dependencies for factories', async () => {
+      opium.registerFactory('instance1', () => '', ['instance2'])
+      expect(() => opium.registerFactory('instance2', () => '', ['instance1']))
+        .to.throw(/Circular dependency detected, 'instance2' is required by 'instance1', that also has 'instance2' in its dependency graph/)
+    })
+
+    it('should fail on complex circular dependencies factories', async () => {
+      opium.registerFactory('instance1', () => '', ['instance3'])
+      opium.registerFactory('instance2', () => '', ['instance1'])
+      expect(() => opium.registerFactory('instance3', {}, ['instance2']))
+        .to.throw(/Circular dependency detected, 'instance3' is required by 'instance1', that also has 'instance3' in its dependency graph/)
+    })
+
+    it('should fail on simple circular dependencies for instances', async () => {
+      opium.registerInstance('instance1', {}, ['instance2'])
+      expect(() => opium.registerInstance('instance2', {}, ['instance1']))
+        .to.throw(/Circular dependency detected, 'instance2' is required by 'instance1', that also has 'instance2' in its dependency graph/)
+    })
+
+    it('should fail on complex circular dependencies instances', async () => {
+      opium.registerInstance('instance1', {}, ['instance3'])
+      opium.registerInstance('instance2', {}, ['instance1'])
+      expect(() => opium.registerFactory('instance3', {}, ['instance2']))
+        .to.throw(/Circular dependency detected, 'instance3' is required by 'instance1', that also has 'instance3' in its dependency graph/)
     })
 
     it('should fail if dependency not registered', async () => {
