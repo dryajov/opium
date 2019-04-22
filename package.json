@@ -16,7 +16,9 @@
     "lint": "aegir lint"
   },
   "devDependencies": {
-    "aegir": "^17.1.1"
+    "aegir": "^17.1.1",
+    "tslint": "^5.16.0",
+    "typescript": "^3.4.4"
   },
   "keywords": [
     "IoC",
