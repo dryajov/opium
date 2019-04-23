@@ -1,22 +1,24 @@
 'use strict'
 
-const Injector = require('../injector')
+import { Injector } from '../injector'
 
-const debug = require('debug')('opium:property-injector')
+import _debug = require('debug')
+import { Dependency } from '../dependency'
+const debug = _debug('opium:property-injector')
 
 /**
  * This class will perform property injection, by matching
  * dependency names to property names. The property is expected
  * to be defined and set to null, otherwise no injection is performed.
  */
-class PropertyInjector extends Injector {
+export class PropertyInjector extends Injector {
   /**
    * Inject the dependency by calling dependency['property name'] = dep1;
    *
    * @param {Dependency} dep
    * @returns {*}
    */
-  async inject (dep) {
+  async inject (dep: Dependency) {
     let allDeps = await super.inject(dep)
 
     if (!allDeps) {
@@ -45,5 +47,3 @@ class PropertyInjector extends Injector {
     return dep.dep
   }
 }
-
-module.exports = PropertyInjector

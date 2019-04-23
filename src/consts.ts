@@ -1,10 +1,13 @@
 'use strict'
 
 // Lifecycle
-exports.SINGLETON = 0
-exports.PROTOTYPE = 1
+export enum LifeCycle {
+  SINGLETON,
+  PROTOTYPE
+}
 
-// Resolver cycle
-exports.TYPE = 0
-exports.FACTORY = 1
-exports.INSTANCE = 2
+export enum ResolverCycle {
+  TYPE,
+  FACTORY,
+  INSTANCE
+}

@@ -1,7 +1,7 @@
 {
   "name": "opium-ioc",
   "version": "2.3.4",
-  "main": "src/index.js",
+  "main": "dist/src/index.js",
   "private": false,
   "license": "MIT",
   "repository": {
@@ -12,12 +12,20 @@
     "node": ">=0.10.0"
   },
   "scripts": {
-    "test": "aegir test",
-    "lint": "aegir lint"
+    "build": "tsc",
+    "test": "npm run build && mocha --require source-map-support/register dist/test/",
+    "lint": "tslint --project tsconfig.json",
+    "lint:fix": "tslint --project tsconfig.json --fix"
   },
   "devDependencies": {
-    "aegir": "^17.1.1",
+    "@types/chai": "^4.1.7",
+    "@types/debug": "^4.1.4",
+    "@types/mocha": "^5.2.6",
+    "mocha": "^6.1.4",
+    "ts-mocha": "^6.0.0",
+    "ts-node": "^8.1.0",
     "tslint": "^5.16.0",
+    "tslint-config-standard": "^8.0.1",
     "typescript": "^3.4.4"
   },
   "keywords": [

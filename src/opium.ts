@@ -1,28 +1,31 @@
 'use strict'
 
-const Dependency = require('./dependency')
+import { Dependency } from './dependency'
 
-const {
+import {
   PropertyInjector,
   ConstructorInjector,
   ArgumentInjector
-} = require('./injectors')
+} from './injectors'
 
-const { SINGLETON } = require('./consts')
+import { LifeCycle } from './consts'
+import { Injector } from './injector'
 
-class Opium {
-  constructor (name = 'default', lifeCycle = SINGLETON) {
+export class Opium {
+  public name: string
+  public registry: Map<string, Dependency>
+  public lifeCycle: LifeCycle = LifeCycle.SINGLETON
+
+  /**
+   * Construct an Opium IoC container
+   *
+   * @param {String} name - name of the container
+   * @param {LifeCycle} lifeCycle - default lifecycle of the dependencies
+   */
+  constructor (name: string = 'default', lifeCycle?: LifeCycle) {
     this.name = name
     this.registry = new Map()
-    this.lifeCycle = lifeCycle
-  }
-
-  get defaultLifeCycle () {
-    return this.lifeCycle
-  }
-
-  set defaultLifeCycle (val) {
-    this.lifeCycle = val
+    this.lifeCycle = lifeCycle || this.lifeCycle
   }
 
   /**
@@ -31,8 +34,8 @@ class Opium {
    * @param {strict} name
    * @returns {*}
    */
-  getDep (name) {
-    return this.registry.get(name)
+  getDep (name: string): Dependency {
+    return this.registry.get(name) as Dependency
   }
 
   /**
@@ -44,17 +47,18 @@ class Opium {
    * @param {SINGLETON|PROTOTYPE} lifeCycle - Life cycle of this dependency
    * @param {array} args - An array of addition arguments to be passed as is to the constructor of the type
    */
-  registerType (name, type, deps = [], lifeCycle = null, args = null) {
+  registerType (name: string, type: any, deps?: string[], ...args: any[]): void
+  registerType (name: string, type: any, deps: string[] = [], lifeCycle: LifeCycle = LifeCycle.SINGLETON, ...args: any[]): void {
     if (Array.isArray(lifeCycle)) {
       args = lifeCycle
-      lifeCycle = this.defaultLifeCycle
+      lifeCycle = this.lifeCycle
     }
 
     this.register(name,
       type,
       deps,
       new ConstructorInjector(),
-      lifeCycle || this.defaultLifeCycle,
+      lifeCycle || this.lifeCycle,
       args)
   }
 
@@ -67,17 +71,18 @@ class Opium {
    * @param {SINGLETON|PROTOTYPE} lifeCycle - Life cycle of this dependency
    * @param {array} args - An array of addition arguments to be passed as is to the factory function
    */
-  registerFactory (name, factory, deps = [], lifeCycle = null, args = null) {
+  registerFactory (name: string, factory: any, deps?: string[], ...args: any[]): void
+  registerFactory (name: string, factory: any, deps: string[] = [], lifeCycle?: LifeCycle, ...args: any[]): void {
     if (Array.isArray(lifeCycle)) {
       args = lifeCycle
-      lifeCycle = this.defaultLifeCycle
+      lifeCycle = this.lifeCycle
     }
 
     this.register(name,
       factory,
       deps,
       new ArgumentInjector(),
-      lifeCycle || this.defaultLifeCycle,
+      lifeCycle || this.lifeCycle,
       args)
   }
 
@@ -89,12 +94,13 @@ class Opium {
    * @param {array} deps - An array of dependencies to be resolved before this factory is called
    * @param {SINGLETON|PROTOTYPE} lifeCycle - Life cycle of this dependency
    */
-  registerInstance (name, instance, deps = [], lifeCycle = null) {
+  registerInstance (name: string, instance: any, deps?: string[], ...args: any[]): void
+  registerInstance (name: string, instance: any, deps: string[] = [], lifeCycle?: LifeCycle): void {
     this.register(name,
       instance,
       deps,
       new PropertyInjector(),
-      lifeCycle || this.defaultLifeCycle)
+      lifeCycle || this.lifeCycle)
   }
 
   /**
@@ -109,16 +115,17 @@ class Opium {
    * @param {array} args - An array of addition arguments to be passed as is to the dependency.
    *                NOTE: Only applies to constructor or argument injectors
    */
-  register (name, dep, deps, injector, lifeCycle, args) {
+  register (name: string, dep: any, deps: string[], injector: Injector, lifeCycle?: LifeCycle, ...args: any[]): void {
     if (!Array.isArray(deps)) {
       throw new Error('dependencies should be an array!')
     }
 
     const _dep = this.registry.get(name)
     if (_dep) {
+      // tslint:disable-next-line: strict-type-predicates
       const _name = typeof _dep.constructor !== 'undefined' ? _dep.constructor : ''
       throw new Error(`another dependency with the same name ${name}` +
-      ` is already registered by another dependency ${_name || ''}`)
+        ` is already registered by another dependency ${_name || ''}`)
     }
 
     this.registry.set(name, new Dependency(name,
@@ -127,9 +134,9 @@ class Opium {
       this.registry,
       injector,
       lifeCycle,
-      args))
+      ...args))
 
-    this._circular(this.registry.get(name))
+    this._circular(this.registry.get(name) as Dependency)
   }
 
   /**
@@ -138,7 +145,7 @@ class Opium {
    * @param {string} name
    * @returns {*}
    */
-  deRegister (name) {
+  deRegister (name: string) {
     const dep = this.registry.get(name)
     if (dep) {
       this.registry.delete(name)
@@ -162,8 +169,7 @@ class Opium {
    * @param {Dependency} dep - the dependency to check
    * @param {Dependency} checky - the object to check against
    */
-  _circular (dep, checky) {
-    if (!checky) checky = dep
+  _circular (dep: Dependency, checky: Dependency = dep) {
     dep.deps.forEach((depName) => {
       const d = this.registry.get(depName)
 
@@ -177,5 +183,3 @@ class Opium {
     })
   }
 }
-
-module.exports = Opium
