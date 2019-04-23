@@ -40,6 +40,7 @@
   "dependencies": {
     "chai": "^4.2.0",
     "debug": "^4.1.0",
-    "dirty-chai": "^2.0.1"
+    "dirty-chai": "^2.0.1",
+    "reflect-metadata": "^0.1.13"
   }
 }
