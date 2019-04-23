@@ -1,13 +1,7 @@
 'use strict'
 
-// Lifecycle
+// Life Ccycle
 export enum LifeCycle {
   SINGLETON,
   PROTOTYPE
-}
-
-export enum ResolverCycle {
-  TYPE,
-  FACTORY,
-  INSTANCE
 }
