@@ -1,9 +1,5 @@
-'use strict'
-
-module.exports = {
-  ...require('./consts'),
-  ...require('./injectors'),
-  Dependency: require('./dependency'),
-  Injector: require('./injector'),
-  Opium: require('./opium')
-}
+export * from './consts'
+export * from './injectors'
+export { Dependency } from './dependency'
+export { Injector } from './injector'
+export { Opium } from './opium'

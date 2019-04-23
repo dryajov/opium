@@ -1,13 +1,9 @@
-/* eslint-env mocha */
-
-'use strict'
-
-const chai = require('chai')
-const dirtyChai = require('dirty-chai')
-const expect = chai.expect
+import * as chai from 'chai'
+import dirtyChai = require('dirty-chai')
+const expect: any = chai.expect
 chai.use(dirtyChai)
 
-const { Opium, PROTOTYPE } = require('../src')
+import { Opium, LifeCycle } from '../src'
 
 describe('opium', () => {
   it('should exist', function () {
@@ -15,8 +11,8 @@ describe('opium', () => {
   })
 
   describe('factory tests', () => {
-    let opium
-    let factory
+    let opium: Opium
+    let factory: Function
 
     beforeEach(() => {
       opium = new Opium()
@@ -24,7 +20,7 @@ describe('opium', () => {
       opium.registerInstance('param2', 'param 2')
 
       let count = 0
-      factory = (param1, param2) => {
+      factory = (param1: any, param2: any) => {
         return [param1, param2, ++count]
       }
     })
@@ -47,7 +43,7 @@ describe('opium', () => {
     })
 
     it('factory should inject prototype', async () => {
-      opium.registerFactory('factory', factory, ['param1', 'param2'], PROTOTYPE)
+      opium.registerFactory('factory', factory, ['param1', 'param2'], LifeCycle.PROTOTYPE)
 
       const dep = opium.getDep('factory')
 
@@ -65,13 +61,13 @@ describe('opium', () => {
 
     it('factory should inject async factory method as prototype', async () => {
       let count = 0
-      opium.registerFactory('factory', async (param1, param2) => {
-        return new Promise((resolve) => {
+      opium.registerFactory('factory', async (param1: any, param2: any) => {
+        return new Promise((resolve: Function) => {
           return setTimeout(resolve([param1, param2, ++count]), 100)
         })
       },
-      ['param1', 'param2'],
-      PROTOTYPE)
+        ['param1', 'param2'],
+        LifeCycle.PROTOTYPE)
 
       const dep = opium.getDep('factory')
 
@@ -89,12 +85,12 @@ describe('opium', () => {
 
     it('factory should inject async factory method as singleton', async () => {
       let count = 0
-      opium.registerFactory('factory', async (param1, param2) => {
-        return new Promise((resolve) => {
+      opium.registerFactory('factory', async (param1: any, param2: any) => {
+        return new Promise((resolve: Function) => {
           return setTimeout(resolve([param1, param2, ++count]), 1000)
         })
       },
-      ['param1', 'param2'])
+        ['param1', 'param2'])
 
       const dep = opium.getDep('factory')
 
@@ -111,13 +107,16 @@ describe('opium', () => {
     })
 
     it('factory should inject with additional args', async () => {
-      opium.registerFactory('factory', (param1, param2, param3) => {
+      opium.registerFactory('factory',
+      (param1: any, param2: any, param3: any, param4: any, param5: any) => {
         expect(param1).to.eq('param 1')
         expect(param2).to.eq('param 2')
         expect(param3).to.eq('param 3')
+        expect(param4).to.eq('param 4')
+        expect(param5).to.eq('param 5')
 
-        return [param1, param2, param3]
-      }, ['param1', 'param2'], ['param 3'])
+        return [param1, param2, param3, param4, param5]
+      }, ['param1', 'param2'], ['param 3', 'param 4', 'param 5'])
 
       const dep = opium.getDep('factory')
 
@@ -126,16 +125,24 @@ describe('opium', () => {
       expect(injected[0]).to.eql('param 1')
       expect(injected[1]).to.eql('param 2')
       expect(injected[2]).to.eql('param 3')
+      expect(injected[3]).to.eql('param 4')
+      expect(injected[4]).to.eql('param 5')
     })
 
     it('factory should inject with additional args as promises', async () => {
-      opium.registerFactory('factory', (param1, param2, param3) => {
+      opium.registerFactory('factory', (param1: any, param2: any, param3: any, param4: any, param5: any) => {
         expect(param1).to.eq('param 1')
         expect(param2).to.eq('param 2')
         expect(param3).to.eq('param 3')
+        expect(param4).to.eq('param 4')
+        expect(param5).to.eq('param 5')
 
-        return [param1, param2, param3]
-      }, ['param1', 'param2'], [Promise.resolve('param 3')])
+        return [param1, param2, param3, param4, param5]
+      }, ['param1', 'param2'], [
+        Promise.resolve('param 3'),
+        Promise.resolve('param 4'),
+        Promise.resolve('param 5')
+      ])
 
       const dep = opium.getDep('factory')
 
@@ -144,13 +151,20 @@ describe('opium', () => {
       expect(injected[0]).to.eql('param 1')
       expect(injected[1]).to.eql('param 2')
       expect(injected[2]).to.eql('param 3')
+      expect(injected[3]).to.eql('param 4')
+      expect(injected[4]).to.eql('param 5')
     })
   })
 
   describe('type tests', async () => {
-    let count, opium
+    let count: number
+    let opium: Opium
     class MyType {
-      constructor (param1, param2) {
+      param1: any
+      param2: any
+      count: number
+
+      constructor (param1: any, param2: any) {
         this.param1 = param1
         this.param2 = param2
         this.count = ++count
@@ -182,7 +196,7 @@ describe('opium', () => {
     })
 
     it('type should inject prototype', async () => {
-      opium.registerType('type', MyType, ['param1', 'param2'], PROTOTYPE)
+      opium.registerType('type', MyType, ['param1', 'param2'], LifeCycle.PROTOTYPE)
 
       const dep = opium.getDep('type')
       const injected = await dep.inject()
@@ -201,6 +215,9 @@ describe('opium', () => {
 
   describe('instance tests', () => {
     class MyType {
+      param1: any
+      param2: any
+      count: number | null
       constructor () {
         this.param1 = null
         this.param2 = null
@@ -208,7 +225,9 @@ describe('opium', () => {
       }
     }
 
-    let opium, count, factory
+    let opium: Opium
+    let count: number
+    let factory: () => number
     beforeEach(() => {
       opium = new Opium()
 
@@ -240,8 +259,8 @@ describe('opium', () => {
     })
 
     it('instance should inject prototype', async () => {
-      opium.registerFactory('count', factory, ['param1', 'param2'], PROTOTYPE)
-      opium.registerInstance('type', new MyType(), ['param1', 'param2', 'count'], PROTOTYPE)
+      opium.registerFactory('count', factory, ['param1', 'param2'], LifeCycle.PROTOTYPE)
+      opium.registerInstance('type', new MyType(), ['param1', 'param2', 'count'], LifeCycle.PROTOTYPE)
 
       const dep = opium.getDep('type')
       const injected = await dep.inject()
@@ -260,14 +279,19 @@ describe('opium', () => {
 
   describe('inject all', () => {
     class MyType {
-      constructor (param1, param2, factoryVal) {
+      param1: any
+      param2: any
+      factoryVal: any
+
+      constructor (param1: any, param2: any, factoryVal: any) {
         this.param1 = param1
         this.param2 = param2
         this.factoryVal = factoryVal
       }
     }
 
-    let opium, factory
+    let opium: Opium
+    let factory: Function
     beforeEach(() => {
       opium = new Opium()
     })
@@ -276,7 +300,7 @@ describe('opium', () => {
       opium.registerInstance('param1', 'param 1')
       opium.registerInstance('param2', 'param 2')
 
-      factory = function (param1, param2) {
+      factory = function (param1: any, param2: any) {
         return [param1, param2]
       }
 
@@ -304,7 +328,7 @@ describe('opium', () => {
   })
 
   describe('error handling', () => {
-    let opium
+    let opium: Opium
     beforeEach(() => {
       opium = new Opium()
     })
@@ -319,14 +343,14 @@ describe('opium', () => {
     })
 
     it('should fail on simple circular dependencies for types', async () => {
-      opium.registerType('instance1', class {}, ['instance2'])
+      opium.registerType('instance1', class { }, ['instance2'])
       expect(() => opium.registerType('instance2', class { }, ['instance1']))
         .to.throw(/Circular dependency detected, 'instance2' is required by 'instance1', that also has 'instance2' in its dependency graph/)
     })
 
     it('should fail on complex circular dependencies for types', async () => {
-      opium.registerType('instance1', class {}, ['instance3'])
-      opium.registerType('instance2', class {}, ['instance1'])
+      opium.registerType('instance1', class { }, ['instance3'])
+      opium.registerType('instance2', class { }, ['instance1'])
       expect(() => opium.registerType('instance3', {}, ['instance2']))
         .to.throw(/Circular dependency detected, 'instance3' is required by 'instance1', that also has 'instance3' in its dependency graph/)
     })
@@ -371,7 +395,7 @@ describe('opium', () => {
 
     it('should fail if dependency is not an array', async () => {
       try {
-        opium.registerInstance('instance1', {}, 'dependency-shoudl-fail')
+        opium.registerInstance('instance1', {}, 'dependency-should-fail' as any)
         const instDep = opium.getDep('instance1')
         const injected = await instDep.inject()
         expect(injected).to.not.exist()
@@ -383,13 +407,14 @@ describe('opium', () => {
 
     it('async factory should throw if not awaited', async () => {
       opium.registerFactory('factory', async () => {
-        return new Promise((resolve) => {
+        return new Promise((resolve: Function) => {
           return setTimeout(resolve(), 1000)
         })
       })
 
       try {
         const dep = opium.getDep('factory')
+        // tslint:disable-next-line: no-floating-promises
         dep.inject() // first inject is not awaited
         await dep.inject() // second inject should throw
       } catch (e) {

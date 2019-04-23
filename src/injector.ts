@@ -1,12 +1,13 @@
-'use strict'
+import _debug = require('debug')
+import { Dependency } from './dependency'
 
-const debug = require('debug')('opium:injector')
+const debug = _debug('opium:injector')
 
 /**
  * This class serves as a base class for all injector types.
  * Extend it to create a new injector type.
  */
-class Injector {
+export class Injector {
   /**
    * Inject a dependency. This method will call inject on all
    * dependencies that it resolves from dep. This method is cascading,
@@ -16,7 +17,7 @@ class Injector {
    * @param {Dependency} dep - the dependency to be injected
    * @returns {*}
    */
-  async inject (dep) {
+  async inject (dep: Dependency) {
     const _deps = dep.resolve()
     let allDeps = await (Array.isArray(_deps) ? Promise.all(_deps) : _deps)
 
@@ -37,5 +38,3 @@ class Injector {
     return allDeps
   }
 }
-
-module.exports = Injector
