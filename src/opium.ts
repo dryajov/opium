@@ -12,17 +12,17 @@ import { LifeCycle } from './consts'
 import { Injector } from './injector'
 
 export class Opium {
-  public name: string
-  public registry: Map<string, Dependency>
+  public name: string | Symbol
+  public registry: Map<any, Dependency>
   public lifeCycle: LifeCycle = LifeCycle.SINGLETON
 
   /**
    * Construct an Opium IoC container
    *
-   * @param {String} name - name of the container
+   * @param {String|Symbol} name - name of the container
    * @param {LifeCycle} lifeCycle - default lifecycle of the dependencies
    */
-  constructor (name: string = 'default', lifeCycle?: LifeCycle) {
+  constructor (name: string | Symbol = 'opium', lifeCycle?: LifeCycle) {
     this.name = name
     this.registry = new Map()
     this.lifeCycle = lifeCycle || this.lifeCycle
@@ -31,7 +31,7 @@ export class Opium {
   /**
    * Ge dependency by name
    *
-   * @param {strict} name
+   * @param {string} name
    * @returns {*}
    */
   getDep (name: string): Dependency {
@@ -41,14 +41,15 @@ export class Opium {
   /**
    * Register a type. By default, type dependencies use constructor injection.
    *
-   * @param {strict} name - Name to register this dependency with
+   * @param {any} name - Name to register this dependency with
    * @param {any} type - The type that this dependency is going to be registered with
    * @param {array} deps - An array of dependencies to be resolved before this dependency is created
    * @param {SINGLETON|PROTOTYPE} lifeCycle - Life cycle of this dependency
    * @param {array} args - An array of addition arguments to be passed as is to the constructor of the type
    */
-  registerType (name: string, type: any, deps?: string[], ...args: any[]): void
-  registerType (name: string, type: any, deps: string[] = [], lifeCycle: LifeCycle = LifeCycle.SINGLETON, ...args: any[]): void {
+  registerType (name: any, deps?: any[]): void
+  registerType (name: any, type: any, deps?: any[], ...args: any[]): void
+  registerType (name: any, type: any = name, deps: any[] = [], lifeCycle: LifeCycle = LifeCycle.SINGLETON, ...args: any[]): void {
     if (Array.isArray(lifeCycle)) {
       args = lifeCycle
       lifeCycle = this.lifeCycle
@@ -71,8 +72,9 @@ export class Opium {
    * @param {SINGLETON|PROTOTYPE} lifeCycle - Life cycle of this dependency
    * @param {array} args - An array of addition arguments to be passed as is to the factory function
    */
-  registerFactory (name: string, factory: any, deps?: string[], ...args: any[]): void
-  registerFactory (name: string, factory: any, deps: string[] = [], lifeCycle?: LifeCycle, ...args: any[]): void {
+  registerFactory (name: any, deps?: any[]): void
+  registerFactory (name: any, factory: any, deps?: string[], ...args: any[]): void
+  registerFactory (name: any, factory: any = name, deps: string[] = [], lifeCycle?: LifeCycle, ...args: any[]): void {
     if (Array.isArray(lifeCycle)) {
       args = lifeCycle
       lifeCycle = this.lifeCycle
@@ -88,14 +90,16 @@ export class Opium {
 
   /**
    * Register an instance (a concrete object). By default, instance dependencies use property/setter injection.
+   * The deps array will be treated as a list of property names to be resolved on the dependency
    *
    * @param {string} name - Name to register this dependency with
    * @param {any} instance - The instance to register
-   * @param {array} deps - An array of dependencies to be resolved before this factory is called
+   * @param {Array<String>} deps - An array of dependencies to be resolved before this dependency is injected
    * @param {SINGLETON|PROTOTYPE} lifeCycle - Life cycle of this dependency
    */
-  registerInstance (name: string, instance: any, deps?: string[], ...args: any[]): void
-  registerInstance (name: string, instance: any, deps: string[] = [], lifeCycle?: LifeCycle): void {
+  registerInstance (name: any, deps?: string[]): void
+  registerInstance (name: any, instance: any, deps?: string[], ...args: any[]): void
+  registerInstance (name: any, instance: any = name, deps: string[] = [], lifeCycle?: LifeCycle): void {
     this.register(name,
       instance,
       deps,
@@ -115,7 +119,7 @@ export class Opium {
    * @param {array} args - An array of addition arguments to be passed as is to the dependency.
    *                NOTE: Only applies to constructor or argument injectors
    */
-  register (name: string, dep: any, deps: string[], injector: Injector, lifeCycle?: LifeCycle, ...args: any[]): void {
+  register (name: any, dep: any, deps: any[], injector: Injector, lifeCycle?: LifeCycle, ...args: any[]): void {
     if (!Array.isArray(deps)) {
       throw new Error('dependencies should be an array!')
     }

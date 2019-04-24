@@ -15,7 +15,7 @@ export class Dependency {
   public dep: any
   public registry: Map<string, Dependency>
   public injector: Injector
-  public lifecycle: LifeCycle
+  public lifeCycle: LifeCycle
   public args: any[] = []
 
   public deps: string[]
@@ -25,7 +25,7 @@ export class Dependency {
   /**
    * Construct a dependency
    *
-   * @param {string} name  - Name of the dependency
+   * @param {any} name  - Name of the dependency
    * @param {any} dep - The dependency to be wrapped
    * @param {array} deps - An array of dependency names
    * @param {map} registry - The global dep registry
@@ -34,10 +34,10 @@ export class Dependency {
    * @param {array} args  - The arguments to pass as is, to constructors and factories
    */
   constructor (
-    name: string,
+    name: any,
     dep: any,
-    deps: string[],
-    registry: Map<string, Dependency>,
+    deps: any[],
+    registry: Map<any, Dependency>,
     injector: Injector,
     lifeCycle: LifeCycle = LifeCycle.SINGLETON,
     ...args: any[]) {
@@ -46,7 +46,7 @@ export class Dependency {
     this.dep = dep
     this.registry = registry
     this.injector = injector
-    this.lifecycle = lifeCycle
+    this.lifeCycle = lifeCycle
     this.args = args
 
     this.deps = Array.isArray(deps) ? deps : [deps]
@@ -61,7 +61,7 @@ export class Dependency {
    * @returns {Dependency.injected|*} - Returns the resolved dependency object (this)
    */
   async injectDeps () {
-    if (this.lifecycle === LifeCycle.PROTOTYPE || !this.hasInjected) {
+    if (this.lifeCycle === LifeCycle.PROTOTYPE || !this.hasInjected) {
       // if injected is a promise, then we're still in the process
       // of resolving this dependency, don't try injecting again until
       // it resolves
@@ -86,11 +86,11 @@ export class Dependency {
       throw new Error(`Dependency has not finished resolving, make sure to await the inject method!`)
     }
 
-    if (this.lifecycle === LifeCycle.PROTOTYPE) {
+    if (this.lifeCycle === LifeCycle.PROTOTYPE) {
       // cleanup after ourself, this should be fine,
       // since inject should be called serially
       this.resolve().forEach((d?: Dependency) => {
-        if (d && d.lifecycle === LifeCycle.PROTOTYPE) d.injected = null
+        if (d && d.lifeCycle === LifeCycle.PROTOTYPE) d.injected = null
       })
 
       this.injected = null
