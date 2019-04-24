@@ -4,7 +4,7 @@ dist
 .sass-cache
 app/bower_components
 .DS_Store
-.history/
+.history/*
 
 # Created by https://www.gitignore.io
 
