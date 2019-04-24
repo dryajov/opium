@@ -13,6 +13,8 @@
   },
   "scripts": {
     "build": "tsc",
+    "clean": "rm -rf dist/",
+    "watch": "tsc --watch",
     "test": "npm run build && mocha --require source-map-support/register dist/test/",
     "lint": "tslint --project tsconfig.json",
     "lint:fix": "tslint --project tsconfig.json --fix",
