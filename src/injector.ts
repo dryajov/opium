@@ -1,7 +1,7 @@
-import _debug = require('debug')
+import Debug from 'debug'
 import { Dependency } from './dependency'
 
-const debug = _debug('opium:injector')
+const debug = Debug('opium:injector')
 
 /**
  * This class serves as a base class for all injector types.
@@ -25,14 +25,18 @@ export class Injector {
       return
     }
 
-    allDeps = await Promise.all(allDeps.map((_dep, i) => {
-      if (!_dep) {
-        throw new Error(`no dependency with name "${dep.deps[i]}" found!
+    try {
+      allDeps = await Promise.all(allDeps.map((_dep, i) => {
+        if (!_dep) {
+          throw new Error(`no dependency with name "${dep.deps[i]}" found!
         Has it been previously registered with one of the register* methods?`)
-      }
+        }
 
-      return _dep.injectDeps()
-    }))
+        return _dep.injectDeps()
+      }))
+    } catch (e) {
+      return Promise.reject(e)
+    }
 
     debug('injecting dependencies for %s', dep.name)
     return allDeps

@@ -34,7 +34,7 @@ export class Opium {
    * @param {string} name
    * @returns {*}
    */
-  getDep (name: string): Dependency {
+  getDep (name: string | Symbol): Dependency {
     return this.registry.get(name) as Dependency
   }
 

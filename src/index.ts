@@ -1,5 +1,5 @@
 export * from './consts'
 export * from './injectors'
-export { Dependency } from './dependency'
-export { Injector } from './injector'
-export { Opium } from './opium'
+export * from './dependency'
+export * from './injector'
+export * from './opium'

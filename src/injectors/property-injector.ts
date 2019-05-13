@@ -1,9 +1,10 @@
 'use strict'
 
 import { Injector } from '../injector'
-import _debug = require('debug')
 import { Dependency } from '../dependency'
-const debug = _debug('opium:property-injector')
+
+import Debug from 'debug'
+const debug = Debug('opium:property-injector')
 
 /**
  * This class will perform property injection, by matching

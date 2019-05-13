@@ -1,8 +1,8 @@
 import { LifeCycle } from './consts'
 import { Injector } from './injector'
 
-import _debug = require('debug')
-const debug = _debug('opium:dependency')
+import Debug from 'debug'
+const debug = Debug('opium:dependency')
 
 /**
  * A Dependency wraps any real dependency (thingy) and provides the facilities
@@ -69,8 +69,14 @@ export class Dependency {
         return this
       }
 
-      // eslint-disable-next-line no-console
-      this.injected = this.injector.inject(this).catch(debug)
+      try {
+        this.injected = this.injector.inject(this).catch((err) => {
+          debug(err)
+          return Promise.reject(err)
+        })
+      } catch (e) {
+        return Promise.reject(e)
+      }
     }
 
     return this
