@@ -11,9 +11,9 @@ const debug = Debug('opium:dependency')
  * calls to the inject method on it, will trigger the injection cycle.
  */
 export class Dependency {
-  public name: string | Symbol
+  public name: symbol | string
   public dep: any
-  public registry: Map<string | Symbol, Dependency>
+  public registry: Map<string | symbol, Dependency>
   public injector: Injector
   public lifeCycle: LifeCycle
   public args: any[] = []
@@ -51,7 +51,7 @@ export class Dependency {
 
     this.deps = Array.isArray(deps) ? deps : [deps]
     if (this.deps.filter((depName) => this.name === depName).length) {
-      throw new Error(`Can't inject ${this.name} into ${this.name}`)
+      throw new Error(`Can't inject ${String(this.name)} into ${String(this.name)}`)
     }
   }
 

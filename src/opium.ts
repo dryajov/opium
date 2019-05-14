@@ -178,8 +178,8 @@ export class Opium {
       const d = this.registry.get(depName)
 
       if (d && d.name === checky.name) {
-        throw new Error(`Circular dependency detected, '${checky.name}' ` +
-          `is required by '${dep.name}', that also has '${checky.name}' in its dependency graph`)
+        throw new Error(`Circular dependency detected, '${String(checky.name)}' ` +
+          `is required by '${String(dep.name)}', that also has '${String(checky.name)}' in its dependency graph`)
       }
 
       if (d) this._circular(d, checky)

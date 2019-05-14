@@ -28,17 +28,17 @@ export class PropertyInjector extends Injector {
 
     for (const depDep of allDeps) {
       if (!depDep) {
-        debug(`Dependency ${dep.name} doesn't exist!`)
+        debug(`Dependency ${String(dep.name)} doesn't exist!`)
         return
       }
 
       if (typeof dep.dep[depDep.name] === 'undefined') {
-        debug(`Property ${depDep.name} undefined in dependency ${dep.name}`)
+        debug(`Property ${String(depDep.name)} undefined in dependency ${String(dep.name)}`)
         return
       }
 
       if (dep.dep[depDep.name]) {
-        debug(`Property ${depDep.name} not null in dependency ${dep.name}`)
+        debug(`Property ${String(depDep.name)} not null in dependency ${String(dep.name)}`)
       }
 
       dep.dep[depDep.name] = await depDep.injected // set property
