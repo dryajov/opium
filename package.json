@@ -1,6 +1,6 @@
 {
   "name": "opium-ioc",
-  "version": "2.5.0",
+  "version": "2.5.1",
   "main": "dist/src/index.js",
   "private": false,
   "license": "MIT",
