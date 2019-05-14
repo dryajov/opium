@@ -11,9 +11,9 @@ const debug = Debug('opium:dependency')
  * calls to the inject method on it, will trigger the injection cycle.
  */
 export class Dependency {
-  public name: string
+  public name: string | Symbol
   public dep: any
-  public registry: Map<string, Dependency>
+  public registry: Map<string | Symbol, Dependency>
   public injector: Injector
   public lifeCycle: LifeCycle
   public args: any[] = []
