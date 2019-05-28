@@ -25,6 +25,6 @@ export class ConstructorInjector extends Injector {
     }
 
     // inject as constructor params
-    return Reflect.construct(dep.dep, args)
+    return Reflect.construct(dep.target, args)
   }
 }

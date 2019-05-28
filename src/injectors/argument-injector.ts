@@ -24,6 +24,6 @@ export class ArgumentInjector extends Injector {
     }
 
     // inject as parameters
-    return dep.dep.apply(dep.dep, args)
+    return dep.target.apply(dep.target, args)
   }
 }

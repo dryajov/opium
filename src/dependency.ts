@@ -1,5 +1,5 @@
 import { LifeCycle } from './consts'
-import { Injector } from './injector'
+import { Injector, getDepStringName } from './injector'
 
 import Debug from 'debug'
 const debug = Debug('opium:dependency')
@@ -11,9 +11,9 @@ const debug = Debug('opium:dependency')
  * calls to the inject method on it, will trigger the injection cycle.
  */
 export class Dependency {
-  public name: symbol | string
-  public dep: any
-  public registry: Map<string | symbol, Dependency>
+  public name: any
+  public target: any
+  public registry: Map<any, Dependency>
   public injector: Injector
   public lifeCycle: LifeCycle
   public args: any[] = []
@@ -26,7 +26,7 @@ export class Dependency {
    * Construct a dependency
    *
    * @param {any} name  - Name of the dependency
-   * @param {any} dep - The dependency to be wrapped
+   * @param {any} target - The dependency to be wrapped
    * @param {array} deps - An array of dependency names
    * @param {map} registry - The global dep registry
    * @param {Injector} injector  - The injector to be used
@@ -35,7 +35,7 @@ export class Dependency {
    */
   constructor (
     name: any,
-    dep: any,
+    target: any,
     deps: any[],
     registry: Map<any, Dependency>,
     injector: Injector,
@@ -43,7 +43,7 @@ export class Dependency {
     ...args: any[]) {
 
     this.name = name
-    this.dep = dep
+    this.target = target
     this.registry = registry
     this.injector = injector
     this.lifeCycle = lifeCycle
@@ -51,7 +51,7 @@ export class Dependency {
 
     this.deps = Array.isArray(deps) ? deps : [deps]
     if (this.deps.filter((depName) => this.name === depName).length) {
-      throw new Error(`Can't inject ${String(this.name)} into ${String(this.name)}`)
+      throw new Error(`Can't inject ${getDepStringName(this.name)} into ${getDepStringName(this.name)}`)
     }
   }
 

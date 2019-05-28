@@ -22,8 +22,8 @@ export class PropertyInjector extends Injector {
     let allDeps = await super.inject(dep)
 
     if (!allDeps) {
-      dep.injected = Promise.resolve(dep.dep)
-      return dep.dep
+      dep.injected = Promise.resolve(dep.target)
+      return dep.target
     }
 
     for (const depDep of allDeps) {
@@ -32,18 +32,18 @@ export class PropertyInjector extends Injector {
         return
       }
 
-      if (typeof dep.dep[depDep.name] === 'undefined') {
+      if (typeof dep.target[depDep.name] === 'undefined') {
         debug(`Property ${String(depDep.name)} undefined in dependency ${String(dep.name)}`)
         return
       }
 
-      if (dep.dep[depDep.name]) {
+      if (dep.target[depDep.name]) {
         debug(`Property ${String(depDep.name)} not null in dependency ${String(dep.name)}`)
       }
 
-      dep.dep[depDep.name] = await depDep.injected // set property
+      dep.target[depDep.name] = await depDep.injected // set property
     }
 
-    return dep.dep
+    return dep.target
   }
 }

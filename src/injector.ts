@@ -3,6 +3,18 @@ import { Dependency } from './dependency'
 
 const debug = Debug('opium:injector')
 
+export function getDepStringName (dep: any): string {
+  if (dep && dep.name) {
+    if (typeof dep.name === 'string') {
+      return dep.name
+    } else if (typeof dep.name.name === 'string') {
+      return dep.name.name
+    }
+  }
+
+  return dep
+}
+
 /**
  * This class serves as a base class for all injector types.
  * Extend it to create a new injector type.
@@ -28,7 +40,7 @@ export class Injector {
     try {
       allDeps = await Promise.all(allDeps.map((_dep, i) => {
         if (!_dep) {
-          throw new Error(`no dependency with name "${dep.deps[i]}" found!
+          throw new Error(`no dependency with name "${getDepStringName(dep.deps[i])}" found!
         Has it been previously registered with one of the register* methods?`)
         }
 
@@ -38,7 +50,7 @@ export class Injector {
       return Promise.reject(e)
     }
 
-    debug('injecting dependencies for %s', dep.name)
+    debug('injecting dependencies for %s', getDepStringName(dep))
     return allDeps
   }
 }
