@@ -24,7 +24,7 @@
     "@types/chai": "^4.1.7",
     "@types/debug": "^4.1.4",
     "@types/mocha": "^5.2.6",
-    "mocha": "^6.1.4",
+    "mocha": "^10.2.0",
     "ts-mocha": "^6.0.0",
     "ts-node": "^8.1.0",
     "tslint": "^5.16.0",
